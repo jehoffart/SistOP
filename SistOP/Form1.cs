@@ -52,7 +52,7 @@ namespace SistOp
 
             lbl1.Location = new System.Drawing.Point(img1.Size.Width/2, img1.Location.Y+img1.Size.Height+10);
             lbl1.Size = new System.Drawing.Size(82, 15);
-            lbl1.Text = "Raiz";
+            lbl1.Text = "Raiz1";
             this.Controls.Add(lbl1);
             this.ResumeLayout(false);
         }
