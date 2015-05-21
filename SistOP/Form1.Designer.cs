@@ -28,24 +28,30 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.button1 = new System.Windows.Forms.Button();
+            this.components = new System.ComponentModel.Container();
+            this.btnNovaPasta = new System.Windows.Forms.Button();
             this.btnVoltar = new System.Windows.Forms.Button();
             this.txtCaminho = new System.Windows.Forms.TextBox();
             this.button3 = new System.Windows.Forms.Button();
             this.sstrip = new System.Windows.Forms.StatusStrip();
             this.tsslabel = new System.Windows.Forms.ToolStripStatusLabel();
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.excluirToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.treeView1 = new System.Windows.Forms.TreeView();
             this.sstrip.SuspendLayout();
+            this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
-            // button1
+            // btnNovaPasta
             // 
-            this.button1.Location = new System.Drawing.Point(693, 12);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 0;
-            this.button1.Text = "Nova Pasta";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.btnNovaPasta_Click);
+            this.btnNovaPasta.Location = new System.Drawing.Point(693, 12);
+            this.btnNovaPasta.Name = "btnNovaPasta";
+            this.btnNovaPasta.Size = new System.Drawing.Size(75, 23);
+            this.btnNovaPasta.TabIndex = 0;
+            this.btnNovaPasta.Text = "Nova Pasta";
+            this.btnNovaPasta.UseVisualStyleBackColor = true;
+            this.btnNovaPasta.Click += new System.EventHandler(this.btnNovaPasta_Click);
             // 
             // btnVoltar
             // 
@@ -89,16 +95,39 @@
             this.tsslabel.Size = new System.Drawing.Size(33, 17);
             this.tsslabel.Text = "Raiz/";
             // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.excluirToolStripMenuItem});
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(109, 26);
+            // 
+            // excluirToolStripMenuItem
+            // 
+            this.excluirToolStripMenuItem.Name = "excluirToolStripMenuItem";
+            this.excluirToolStripMenuItem.Size = new System.Drawing.Size(108, 22);
+            this.excluirToolStripMenuItem.Text = "Excluir";
+            this.excluirToolStripMenuItem.Click += new System.EventHandler(this.excluirToolStripMenuItem_Click);
+            // 
+            // treeView1
+            // 
+            this.treeView1.Location = new System.Drawing.Point(940, 78);
+            this.treeView1.Name = "treeView1";
+            this.treeView1.Size = new System.Drawing.Size(224, 323);
+            this.treeView1.TabIndex = 4;
+            this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1189, 508);
+            this.Controls.Add(this.treeView1);
             this.Controls.Add(this.sstrip);
             this.Controls.Add(this.button3);
             this.Controls.Add(this.txtCaminho);
             this.Controls.Add(this.btnVoltar);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.btnNovaPasta);
             this.Name = "Form1";
             this.Text = "Form1";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
@@ -106,9 +135,11 @@
             this.MinimumSizeChanged += new System.EventHandler(this.Form1_ResizeEnd);
             this.Load += new System.EventHandler(this.Form1_Load);
             this.ResizeEnd += new System.EventHandler(this.Form1_ResizeEnd);
+            this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyUp);
             this.Resize += new System.EventHandler(this.Form1_Resize);
             this.sstrip.ResumeLayout(false);
             this.sstrip.PerformLayout();
+            this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -116,12 +147,16 @@
 
         #endregion
 
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button btnNovaPasta;
         private System.Windows.Forms.Button btnVoltar;
         private System.Windows.Forms.TextBox txtCaminho;
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.StatusStrip sstrip;
         private System.Windows.Forms.ToolStripStatusLabel tsslabel;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem excluirToolStripMenuItem;
+        private System.Windows.Forms.ToolTip toolTip1;
+        private System.Windows.Forms.TreeView treeView1;
     }
 }
 

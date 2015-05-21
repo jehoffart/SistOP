@@ -14,6 +14,12 @@ namespace SistOp.DataStructure
         private int countID = 0;
         private List<Arquivo> FileList = new List<Arquivo>();
 
+        internal List<Arquivo> FileList1
+        {
+            get { return FileList; }
+            set { FileList = value; }
+        }
+
         public int CountID
         {
             get { return countID; }
@@ -69,16 +75,22 @@ namespace SistOp.DataStructure
             return null;
         }
         /// <summary>
-        /// Insere um arquivo na árvore e salva no disco
+        /// Verifica se arquivo já existe, insere nó na arvore e salva em disco
         /// </summary>
-        /// <param name="Nome">Nome do arquivo</param>
+        /// <param name="Nome">Nome dado ao arquivo</param>
         /// <param name="Pai">Pai do arquivo</param>
-        /// <param name="type">Se false: Arquivo. Se true: Diretório</param>
-        public void Inserir(string Nome, Arquivo Pai, DataControl.IsDirectory type)
+        /// <param name="type">Tipo de arquivo criado, D - Diretorio e A - Arquivo</param>
+        /// <returns>retorna true para arquivo criado e false para arquivo já existente com o mesmo nome.</returns>
+        public bool Inserir(string Nome, Arquivo Pai, DataControl.IsDirectory type)
         {
             Arquivo aux = null;
             DataControl DC = new DataControl();
             //Se raiz não existir, cria uma nova raiz
+
+            if (existeArquivo(Nome,Pai))
+            {
+                return false;
+            }
             if (Pai == null)
             {
 
@@ -100,8 +112,10 @@ namespace SistOp.DataStructure
 
             if (aux != null)
             {
+                FileList.Add(aux);
                 DC.Salva(aux.Nome, aux.IsDir, aux.Conteudo, Pai, aux.DirID, Pai.DirID);
             }
+            return true;
         }
 
         public Arquivo Inserir(string Nome, DataControl.IsDirectory type, long DirID, long PaiID)
@@ -110,9 +124,7 @@ namespace SistOp.DataStructure
             DataControl DC = new DataControl();
             //Se raiz não existir, cria uma nova raiz
 
-            aux = new Arquivo(Nome, null, type, DirID, PaiID);
-
-            //
+                        //
             if (type == DataControl.IsDirectory.A)
             {
                 aux = new Arquivo(Nome, null, type, -1, PaiID);
@@ -120,10 +132,11 @@ namespace SistOp.DataStructure
             }
             else if (type == DataControl.IsDirectory.D)
             {
-                aux = new Arquivo(Nome, null, type, countID++, PaiID);
+                aux = new Arquivo(Nome, null, type, DirID, PaiID);
                 FileList.Add(aux);
-            }
 
+            }
+            countID++;
             return aux;
         }
 
@@ -159,7 +172,6 @@ namespace SistOp.DataStructure
             string[] auxFiles;
             string[] aux1;
 
-            bool novoArquivo = false;
             if (Dados == "")
             {
                 Raiz = CriaRaiz();
