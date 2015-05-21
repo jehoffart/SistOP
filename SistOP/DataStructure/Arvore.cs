@@ -26,9 +26,48 @@ namespace SistOp.DataStructure
 
         public Arquivo CriaRaiz()
         {
-            return new Arquivo("Raiz", null, DataControl.IsDirectory.D, countID++, -1);
+            DataControl DC = new DataControl();
+            Arquivo aux = new Arquivo("Raiz", null, DataControl.IsDirectory.D, countID++, -1);
+            DC.Salva(aux.Nome, aux.IsDir, aux.Conteudo, null, aux.DirID, aux.PaiID);
+            return aux;
+        }
+        public string CaminhoAteRaiz(Arquivo atual)
+        {
+            Arquivo aux;
+            string retorno = atual.Nome;
+            aux = atual;
+
+            while (aux != raiz)
+            {
+
+                retorno = aux.Pai.Nome + "/" + retorno;
+                aux = aux.Pai;
+            }
+            return retorno;
         }
 
+        //Retorna o filho selecionado.
+        public Arquivo ProcuraFilho(String NomeFilho, Arquivo Pai)
+        {
+            foreach (Arquivo arq in Pai.Filhos)
+            {
+                if (NomeFilho == arq.Nome)
+                {
+                    return arq;
+                }
+
+            }
+            return null;
+        }
+        public Arquivo ProcuraID(long DirID)
+        {
+            foreach (Arquivo a in FileList)
+            {
+                if (a.DirID == DirID)
+                    return a;
+            }
+            return null;
+        }
         /// <summary>
         /// Insere um arquivo na árvore e salva no disco
         /// </summary>
@@ -117,27 +156,39 @@ namespace SistOp.DataStructure
             DataControl DC = new DataControl();
             string Dados = DC.Recupera();
             string aux = "";
+            string[] auxFiles;
             string[] aux1;
+
             bool novoArquivo = false;
+            if (Dados == "")
+            {
+                Raiz = CriaRaiz();
+                Dados = DC.Recupera();
+            }
             if (Dados != "")
             {
-                foreach (char c in Dados)
-                {
-                    if (novoArquivo && c != '@')
-                    {
-                        aux += c;
-                    }
-                    if (c == '@' && !novoArquivo)
-                    {
-                        novoArquivo = true;
-                        aux = "";
-                        //@|isdir|Nome|HashID|<conteudo>|
 
-                    }
-                    else if (c == '@' && novoArquivo)
+                Dados = Dados.Trim('@');
+                auxFiles = Dados.Split('@');
+
+                foreach (string c in auxFiles)
+                {
+                    //if (novoArquivo && c != '@')
+                    //{
+                    //    aux += c;
+                    //}
+                    //if (c == '@' && !novoArquivo)
+                    //{
+                    //    novoArquivo = true;
+                    //    aux = "";
+                    //    //@|isdir|Nome|HashID|<conteudo>|
+
+                    //}
+                    //else if (c == '@' && novoArquivo)
+                    if (c != "")
                     {
-                        novoArquivo = false;
-                        aux = aux.Trim('|');
+                        //novoArquivo = false;
+                        aux = c.Trim('|');
                         aux1 = aux.Split('|');
                         DataControl.IsDirectory tip;
                         if (aux1[0] == DataControl.IsDirectory.D.ToString())
@@ -152,6 +203,10 @@ namespace SistOp.DataStructure
                         }
 
                         Arquivo arq = Inserir(aux1[1], tip, long.Parse(aux1[2]), long.Parse(aux1[3]));
+                        if (arq.DirID == 0)
+                        {
+                            Raiz = arq;
+                        }
                         foreach (Arquivo a in this.FileList)
                         {
                             if (a.DirID == arq.PaiID)

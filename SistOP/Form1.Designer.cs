@@ -29,9 +29,12 @@
         private void InitializeComponent()
         {
             this.button1 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
+            this.btnVoltar = new System.Windows.Forms.Button();
             this.txtCaminho = new System.Windows.Forms.TextBox();
             this.button3 = new System.Windows.Forms.Button();
+            this.sstrip = new System.Windows.Forms.StatusStrip();
+            this.tsslabel = new System.Windows.Forms.ToolStripStatusLabel();
+            this.sstrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // button1
@@ -40,19 +43,19 @@
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 0;
-            this.button1.Text = "button1";
+            this.button1.Text = "Nova Pasta";
             this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.button1.Click += new System.EventHandler(this.btnNovaPasta_Click);
             // 
-            // button2
+            // btnVoltar
             // 
-            this.button2.Location = new System.Drawing.Point(693, 41);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 23);
-            this.button2.TabIndex = 0;
-            this.button2.Text = "button1";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
+            this.btnVoltar.Location = new System.Drawing.Point(774, 12);
+            this.btnVoltar.Name = "btnVoltar";
+            this.btnVoltar.Size = new System.Drawing.Size(75, 23);
+            this.btnVoltar.TabIndex = 0;
+            this.btnVoltar.Text = "Voltar";
+            this.btnVoltar.UseVisualStyleBackColor = true;
+            this.btnVoltar.Click += new System.EventHandler(this.btnVoltar_Click);
             // 
             // txtCaminho
             // 
@@ -70,18 +73,42 @@
             this.button3.Text = "button3";
             this.button3.UseVisualStyleBackColor = true;
             // 
+            // sstrip
+            // 
+            this.sstrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tsslabel});
+            this.sstrip.Location = new System.Drawing.Point(0, 486);
+            this.sstrip.Name = "sstrip";
+            this.sstrip.Size = new System.Drawing.Size(1189, 22);
+            this.sstrip.TabIndex = 3;
+            this.sstrip.Text = "statusStrip1";
+            // 
+            // tsslabel
+            // 
+            this.tsslabel.Name = "tsslabel";
+            this.tsslabel.Size = new System.Drawing.Size(33, 17);
+            this.tsslabel.Text = "Raiz/";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(780, 508);
+            this.ClientSize = new System.Drawing.Size(1189, 508);
+            this.Controls.Add(this.sstrip);
             this.Controls.Add(this.button3);
             this.Controls.Add(this.txtCaminho);
-            this.Controls.Add(this.button2);
+            this.Controls.Add(this.btnVoltar);
             this.Controls.Add(this.button1);
             this.Name = "Form1";
             this.Text = "Form1";
+            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
+            this.MaximumSizeChanged += new System.EventHandler(this.Form1_ResizeEnd);
+            this.MinimumSizeChanged += new System.EventHandler(this.Form1_ResizeEnd);
             this.Load += new System.EventHandler(this.Form1_Load);
+            this.ResizeEnd += new System.EventHandler(this.Form1_ResizeEnd);
+            this.Resize += new System.EventHandler(this.Form1_Resize);
+            this.sstrip.ResumeLayout(false);
+            this.sstrip.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -90,9 +117,11 @@
         #endregion
 
         private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button btnVoltar;
         private System.Windows.Forms.TextBox txtCaminho;
         private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.StatusStrip sstrip;
+        private System.Windows.Forms.ToolStripStatusLabel tsslabel;
     }
 }
 
