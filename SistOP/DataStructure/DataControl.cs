@@ -11,10 +11,12 @@ namespace SistOp.DataStructure
 {
     class DataControl
     {
-        private const string FILE_NAME = "FileSystem.dat";
+        private const string FILE_NAME = "FileSystem.bin";
         //private const string COUNT_FILE_NAME = "count.dat";
         public enum IsDirectory { D, A }
         private string dados = "";
+
+        
         public bool FileExists()
         {
             if (File.Exists(FILE_NAME))
@@ -39,25 +41,51 @@ namespace SistOp.DataStructure
             return "<" + conteudo + ">";
 
         }
+        public string genStringFile(Arquivo Atual)
+        {
+            return genStringFile(Atual.Nome, Atual.IsDir, Atual.Conteudo, Atual.Pai, Atual.DirID, Atual.PaiID);
+        }
         public string genStringFile(string nome, IsDirectory diretorio, string conteudo, Arquivo Pai, long dirID, long paiID)
         {
 
-            string isDir = "";
+
             string retorno = "";
-            if (diretorio == IsDirectory.D)
-            {
-                isDir = IsDirectory.D.ToString();
-            }
-            else
-            {
-                isDir = IsDirectory.A.ToString();
-            }
+
             //Indica inicio de arquivo.
-            //@|isdir|Nome|HashDirID|HashPai|<conteudo>|
+            //@|isdir|Permissao|Nome|DirID|PaiID|<conteudo>|@
             retorno += "@|";
 
             //Adiciona validador de diretório
-            retorno += isDir + "|";
+            retorno += diretorio.ToString() + "|";
+
+            //Adiciona nome do arquivo
+            retorno += nome + "|";
+
+            //Adiciona hashID do arquivo
+            retorno += dirID + "|";
+
+            //Adiciona hashID do pai do arquivo
+            retorno += paiID + "|";
+
+            //Adiciona conteudo entre <>
+            retorno += addSeparadordeConteudo(conteudo) + "|@";
+            return retorno;
+        }
+        public string genStringFile(string nome, IsDirectory diretorio, string conteudo, Arquivo Pai, long dirID, long paiID, Permissions.PermissionsType permissao)
+        {
+
+        
+            string retorno = "";
+        
+            //Indica inicio de arquivo.
+            //@|isdir|Permissao|Nome|DirID|PaiID|<conteudo>|@
+            retorno += "@|";
+
+            //Adiciona validador de diretório
+            retorno += diretorio.ToString() + "|";
+
+            //
+            retorno += permissao.ToString() + "|";
 
             //Adiciona nome do arquivo
             retorno += nome + "|";
@@ -96,8 +124,36 @@ namespace SistOp.DataStructure
 
 
             fs.Close();
+            w.Close();
         }
+        public void Atualiza(Arquivo Atual, Arquivo Atualizado)
+        {
 
+            this.dados = Recupera();
+            FileStream fs;
+            BinaryWriter w;
+
+            if (FileExists())
+            {
+                fs = new FileStream(FILE_NAME, FileMode.Open, FileAccess.ReadWrite);
+                w = new BinaryWriter(fs);
+            }
+            else
+            {
+                fs = new FileStream(FILE_NAME, FileMode.CreateNew);
+                w = new BinaryWriter(fs);
+            }
+
+            string at = genStringFile(Atual);
+            string atual = genStringFile(Atualizado);
+
+            this.dados = this.dados.Replace(at, atual);
+
+            w.Write(this.dados);
+
+            w.Close();
+            fs.Close();
+        }
 
         public string Recupera()
         {
@@ -141,7 +197,7 @@ namespace SistOp.DataStructure
             //Salva a String de arquivo em disco
             w.Write(this.dados);
 
-
+            w.Close();
             fs.Close();
         }
 

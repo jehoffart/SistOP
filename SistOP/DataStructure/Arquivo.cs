@@ -16,7 +16,7 @@ namespace SistOp.DataStructure
         private string conteudo;
         private List<Arquivo> filhos;
         private Arquivo pai;
-
+        
         private long dirID;
         private long paiID;
 
@@ -98,6 +98,8 @@ namespace SistOp.DataStructure
             this.isDir = Diretorio;
             this.Filhos = new List<Arquivo>();
             this.dirID = dirID;
+            this.conteudo = "";
+           
         }
         public Arquivo(string Nome, Arquivo pai, DataControl.IsDirectory Diretorio, long dirID, long paiID,string Conteudo)
         {
@@ -108,6 +110,16 @@ namespace SistOp.DataStructure
             this.dirID = dirID;
             this.paiID = paiID;
             this.conteudo = Conteudo;
+        }
+        public Arquivo(Arquivo Arquivo)
+        {
+            this.nome = Arquivo.Nome;
+            this.Pai = Arquivo.Pai;
+            this.isDir = Arquivo.isDir;
+            this.Filhos = Arquivo.Filhos;
+            this.dirID = Arquivo.dirID;
+            this.paiID = Arquivo.paiID;
+            this.conteudo = Arquivo.Conteudo;
         }
     }
 }

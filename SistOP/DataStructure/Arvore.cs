@@ -101,12 +101,12 @@ namespace SistOp.DataStructure
             //
             if (type == DataControl.IsDirectory.A)
             {
-                aux = new Arquivo(Nome, Pai, DataControl.IsDirectory.A, -1);
+                aux = new Arquivo(Nome, Pai, DataControl.IsDirectory.A, -1,Pai.DirID,"");
                 Pai.Filhos.Add(aux);
             }
             else if (type == DataControl.IsDirectory.D)
             {
-                aux = new Arquivo(Nome, Pai, DataControl.IsDirectory.D, countID++);
+                aux = new Arquivo(Nome, Pai, DataControl.IsDirectory.D, countID++,Pai.DirID,"");
                 Pai.Filhos.Add(aux);
             }
 

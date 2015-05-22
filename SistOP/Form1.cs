@@ -19,13 +19,16 @@ namespace SistOp
         Arvore FileSystem = new Arvore();
         Point localProximoArquivo;
         PictureBox Clicado;
+        ImageList IL = new ImageList();
         int Id = 0;
         public Form1()
         {
             InitializeComponent();
             FileSystem.recuperaArvore();
             dirAberto = FileSystem.Raiz;
-            //ExibeArvore(dirAberto);
+            IL.Images.Add(Image.FromFile(Directory.GetCurrentDirectory() + @"\Resources\file.png"));
+            IL.Images.Add(Image.FromFile(Directory.GetCurrentDirectory() + @"\Resources\folder.png"));
+            twvListaPastas.ImageList = IL;
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -36,7 +39,38 @@ namespace SistOp
         private void Form1_Load(object sender, EventArgs e)
         {
             LimpaLayout(dirAberto, true);
+            CriaTree(FileSystem.Raiz);
         }
+
+        private void CriaTree(Arquivo arquivo)
+        {
+            twvListaPastas.Nodes.Clear();
+            twvListaPastas.Nodes.Add(arquivo.Nome);
+
+            Tree(twvListaPastas.Nodes[0], arquivo);
+        }
+
+        private void Tree(TreeNode treeNode, Arquivo arquivo)
+        {
+            int count = 0;
+
+
+            foreach (Arquivo a in arquivo.Filhos)
+            {
+                if (a.IsDir == DataControl.IsDirectory.D)
+                {
+                    treeNode.Nodes.Add(a.Nome, a.Nome, 1,1);
+                }
+                else
+                {
+                    treeNode.Nodes.Add(a.Nome, a.Nome, 0,0);
+                }
+                Tree(treeNode.Nodes[count++], a);
+            }
+
+        }
+
+
         private void LimpaLayout(Arquivo PastaAtual, bool redesenha)
         {
             bool Tiroutodos = false;
@@ -72,12 +106,12 @@ namespace SistOp
             if (PastaAtual != null)
             {
 
-                int countX = 0, countY = 0;
+                int countX = 0, countY = 0, minLoc = 212;
                 foreach (Arquivo a in PastaAtual.Filhos)
                 {
                     this.SuspendLayout();
                     var img1 = new System.Windows.Forms.PictureBox();
-                    img1.Location = new System.Drawing.Point(12 + (82 + 12) * countX, 51 + (countY * (15 + 12 + 77)));
+                    img1.Location = new System.Drawing.Point(minLoc + (82 + 12) * countX, 51 + (countY * (30 + 12 + 77)));
                     img1.Size = new System.Drawing.Size(82, 77);
 
                     if (a.IsDir == DataControl.IsDirectory.D)
@@ -103,42 +137,28 @@ namespace SistOp
 
                     var lbl1 = new System.Windows.Forms.Label();
 
-                    lbl1.Location = new System.Drawing.Point((img1.Location.X + 20), img1.Location.Y + img1.Size.Height + 10);
 
-                    lbl1.Size = new System.Drawing.Size(82, 15);
+
+                    lbl1.Size = new System.Drawing.Size(82, 30);
                     lbl1.Text = a.Nome;
                     lbl1.Name = lbl1 + a.Nome;
-                    lbl1.AutoSize = true;
+                    lbl1.AutoSize = false;
+                    lbl1.TextAlign = ContentAlignment.TopCenter;
+
                     this.Controls.Add(lbl1);
                     this.ResumeLayout(false);
                     if (img1.Location.X > this.Size.Width || img1.Location.X + img1.Size.Width > this.Size.Width)
                     {
                         countY++;
                         countX = 0;
-                        img1.Location = new System.Drawing.Point(12 + (82 + 12) * countX, 51 + (countY * (15 + 12 + 77)));
+                        img1.Location = new System.Drawing.Point(minLoc + (82 + 12) * countX, 51 + (countY * (30 + 12 + 77)));
                     }
                     countX++;
-
+                    lbl1.Location = new System.Drawing.Point((img1.Location.X), img1.Location.Y + img1.Size.Height + 2);
                 }
 
-                localProximoArquivo = new System.Drawing.Point(12 + (82 + 12) * countX, 51 + (countY * (15 + 12 + 77)));
+                localProximoArquivo = new System.Drawing.Point(minLoc + (82 + 12) * countX, 51 + (countY * (30 + 12 + 77)));
 
-                //this.SuspendLayout();
-                //var img1 = new System.Windows.Forms.PictureBox();
-                //img1.Location = new System.Drawing.Point(12, 51);
-                //img1.Size = new System.Drawing.Size(82, 77);
-                //img1.Image = Image.FromFile(Directory.GetCurrentDirectory() + @"\Resources\folder.png");
-                //img1.SizeMode = PictureBoxSizeMode.StretchImage; 
-                //img1.BorderStyle = BorderStyle.Fixed3D;
-                //this.Controls.Add(img1);
-
-                //var lbl1 = new System.Windows.Forms.Label();
-
-                //lbl1.Location = new System.Drawing.Point(img1.Size.Width/2, img1.Location.Y+img1.Size.Height+10);
-                //lbl1.Size = new System.Drawing.Size(82, 15);
-                //lbl1.Text = "Raiz1";
-                //this.Controls.Add(lbl1);
-                //this.ResumeLayout(false);
             }
         }
 
@@ -164,6 +184,8 @@ namespace SistOp
         }
         public void Abre(object sender, MouseEventArgs e)
         {
+
+
             PictureBox pb = sender as PictureBox;
             if (pb.ImageLocation == Directory.GetCurrentDirectory() + @"\Resources\folder.png")
             {
@@ -184,6 +206,7 @@ namespace SistOp
             }
             else if (pb.ImageLocation == Directory.GetCurrentDirectory() + @"\Resources\file.png")
             {
+                twvListaPastas.Visible = false;
                 LimpaLayout(dirAberto, false);
                 FileAberto = FileSystem.ProcuraFilho(pb.Name, dirAberto);
                 GeraLayoutEdicao(FileAberto);
@@ -192,13 +215,15 @@ namespace SistOp
 
         private void GeraLayoutEdicao(Arquivo aberto)
         {
+            BinaryChange BC = new BinaryChange();
             this.SuspendLayout();
             var txtEdit = new TextBox();
             txtEdit.Name = aberto.Nome;
             txtEdit.Multiline = true;
             txtEdit.Size = new Size(600, 600);
+            txtEdit.Name = "EditorTexto";
             txtEdit.Location = new Point(12, 51);
-            txtEdit.Text = aberto.Conteudo;
+            txtEdit.Text = BC.toStr(aberto.Conteudo);
             txtEdit.TextChanged += txtEdit_TextChanged;
             this.Controls.Add(txtEdit);
             foreach (Control c in Controls)
@@ -215,17 +240,52 @@ namespace SistOp
             btnSalvar.Text = "Salvar";
             btnSalvar.Size = new Size(100, 20);
             btnSalvar.Location = new Point(12, txtEdit.Size.Height + 12 + txtEdit.Location.Y);
+            btnSalvar.Name = "btnSalvar";
             btnSalvar.Click += btnSalvar_Click;
             Controls.Add(btnSalvar);
 
-            var btnCancelar = new Button();
-            btnCancelar.Text = "Cancelar";
-            btnCancelar.Size = new Size(100, 20);
-            btnCancelar.Location = new Point(btnSalvar.Location.X + 12 + btnSalvar.Size.Width, txtEdit.Size.Height + 12 + txtEdit.Location.Y);
-            Controls.Add(btnCancelar);
+            var btnFechar = new Button();
+            btnFechar.Text = "Fechar";
+            btnFechar.Name = "btnFechar";
+            btnFechar.Size = new Size(100, 20);
+            btnFechar.Location = new Point(btnSalvar.Location.X + 12 + btnSalvar.Size.Width, txtEdit.Size.Height + 12 + txtEdit.Location.Y);
+            btnFechar.Click += btnFechar_Click;
+            Controls.Add(btnFechar);
 
             this.ResumeLayout(false);
         }
+
+        void btnFechar_Click(object sender, EventArgs e)
+        {
+            bool removeutodos = false;
+            LimpaLayout(dirAberto, true);
+            SuspendLayout();
+
+
+            while (!removeutodos)
+            {
+                removeutodos = true;
+                foreach (Control c in Controls)
+                {
+
+
+                    if (c.GetType() == typeof(Button) || c.GetType() == typeof(TextBox))
+                    {
+                        c.Enabled = true;
+                        if (c.Name == "btnFechar" || c.Name == "btnSalvar" || c.Name == "EditorTexto")
+                        {
+
+                            Controls.Remove(c);
+                            removeutodos = false;
+                        }
+                    }
+                }
+            }
+            twvListaPastas.Visible = true;
+        }
+
+
+
 
         void txtEdit_TextChanged(object sender, EventArgs e)
         {
@@ -237,8 +297,12 @@ namespace SistOp
 
         void btnSalvar_Click(object sender, EventArgs e)
         {
+            DataControl DC = new DataControl();
             BinaryChange BC = new BinaryChange();
-            string teste = BC.toByte(texto);
+            string Hex = BC.toByte(texto);
+            Arquivo aux = new Arquivo(FileAberto);
+            FileAberto.Conteudo = Hex;
+            DC.Atualiza(aux, FileAberto);
 
 
         }
@@ -294,17 +358,12 @@ namespace SistOp
             if (e.KeyChar == '@' || e.KeyChar == '|' || e.KeyChar == '<' || e.KeyChar == '>')
             {
                 e.Handled = true;
-
                 toolTip1.Show("Os Caracteres @ | < > não são permitidos", sender as Control);
-
-
             }
             else
             {
                 toolTip1.Hide(sender as Control);
             }
-
-
         }
 
         void txt_KeyUp(object sender, KeyEventArgs e)
@@ -331,6 +390,10 @@ namespace SistOp
 
                     LimpaLayout(dirAberto, true);
                     btnNovaPasta.Enabled = true;
+                    if (isDir == DataControl.IsDirectory.D)
+                    {
+                        CriaTree(FileSystem.Raiz);
+                    }
                 }
                 else
                 {
@@ -341,7 +404,6 @@ namespace SistOp
 
         private void excluirToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
             Arquivo remove = FileSystem.ProcuraFilho(Clicado.Name, dirAberto);
             DataControl DC = new DataControl();
             DC.remove(remove.Nome, remove.IsDir, remove.Conteudo, remove, remove.DirID, remove.PaiID);
@@ -360,30 +422,6 @@ namespace SistOp
         {
 
         }
-        //private void ExibeArvore(Arquivo raiz)
-        //{
-        //    treeView1.BeginUpdate();
-        //    treeView1.Nodes.Add("Raiz");
-
-        //    foreach (Arquivo a in raiz.Filhos)
-        //    {
-        //        treeView1.Nodes[0].Nodes.Add(a.Nome);
-        //        ExibeArvore(treeView1.Nodes[0], a);
-        //    }
-
-        //    treeView1.EndUpdate();
-        //}
-
-        //private void ExibeArvore(TreeNode treeNode,Arquivo a)
-        //{
-        //    for (int i = 0; i < a.Filhos.Count; i++)
-        //    {
-        //        treeView1.Nodes[0].Nodes.Add(a.Nome);
-        //        ExibeArvore(treeView1.Nodes[0], a.Filhos[i]);
-        //    }           
-
-        //}
-
         private void btnNewFile_Click(object sender, EventArgs e)
         {
             btnNovaPasta.Enabled = false;
@@ -402,6 +440,7 @@ namespace SistOp
             var txt = new System.Windows.Forms.TextBox();
             txt.Name = "txtNovoArquivo";
             txt.KeyUp += txt_KeyUp;
+            txt.MaxLength = 900000;
             txt.KeyPress += txt_KeyPress;
             txt.Location = new System.Drawing.Point((img1.Location.X), img1.Location.Y + img1.Size.Height + 10);
             txt.Size = new System.Drawing.Size(img1.Size.Width, txt.Size.Height);

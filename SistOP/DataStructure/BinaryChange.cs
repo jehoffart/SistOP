@@ -11,10 +11,10 @@ namespace SistOp.DataStructure
         public string toByte(string texto)
         {
             byte[] bytes1;
-            bytes1 = Encoding.ASCII.GetBytes(texto);
+            bytes1 = Encoding.UTF8.GetBytes(texto);
             return BitConverter.ToString(bytes1);
         }
-
+        
         public string toStr(string bytes)
         {
             string[] aux = bytes.Split('-');

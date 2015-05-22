@@ -38,7 +38,7 @@
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.excluirToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.treeView1 = new System.Windows.Forms.TreeView();
+            this.twvListaPastas = new System.Windows.Forms.TreeView();
             this.btnNewFile = new System.Windows.Forms.Button();
             this.sstrip.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
@@ -67,6 +67,7 @@
             // txtCaminho
             // 
             this.txtCaminho.Location = new System.Drawing.Point(12, 12);
+            this.txtCaminho.MaxLength = 32171;
             this.txtCaminho.Name = "txtCaminho";
             this.txtCaminho.Size = new System.Drawing.Size(638, 20);
             this.txtCaminho.TabIndex = 1;
@@ -110,13 +111,15 @@
             this.excluirToolStripMenuItem.Text = "Excluir";
             this.excluirToolStripMenuItem.Click += new System.EventHandler(this.excluirToolStripMenuItem_Click);
             // 
-            // treeView1
+            // twvListaPastas
             // 
-            this.treeView1.Location = new System.Drawing.Point(940, 78);
-            this.treeView1.Name = "treeView1";
-            this.treeView1.Size = new System.Drawing.Size(224, 323);
-            this.treeView1.TabIndex = 4;
-            this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
+            this.twvListaPastas.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.twvListaPastas.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.twvListaPastas.Location = new System.Drawing.Point(12, 38);
+            this.twvListaPastas.Name = "twvListaPastas";
+            this.twvListaPastas.Size = new System.Drawing.Size(200, 432);
+            this.twvListaPastas.TabIndex = 4;
+            this.twvListaPastas.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
             // 
             // btnNewFile
             // 
@@ -134,7 +137,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1189, 508);
             this.Controls.Add(this.btnNewFile);
-            this.Controls.Add(this.treeView1);
+            this.Controls.Add(this.twvListaPastas);
             this.Controls.Add(this.sstrip);
             this.Controls.Add(this.button3);
             this.Controls.Add(this.txtCaminho);
@@ -168,7 +171,7 @@
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem excluirToolStripMenuItem;
         private System.Windows.Forms.ToolTip toolTip1;
-        private System.Windows.Forms.TreeView treeView1;
+        private System.Windows.Forms.TreeView twvListaPastas;
         private System.Windows.Forms.Button btnNewFile;
     }
 }
