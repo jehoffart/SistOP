@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -33,7 +34,7 @@ namespace SistOp.DataStructure
         public Arquivo CriaRaiz()
         {
             DataControl DC = new DataControl();
-            Arquivo aux = new Arquivo("Raiz", null, DataControl.IsDirectory.D, countID++, -1,"");
+            Arquivo aux = new Arquivo("Raiz", null, DataControl.IsDirectory.D, countID++, -1, "");
             DC.Salva(aux.Nome, aux.IsDir, aux.Conteudo, null, aux.DirID, aux.PaiID);
             return aux;
         }
@@ -45,7 +46,6 @@ namespace SistOp.DataStructure
 
             while (aux != raiz)
             {
-
                 retorno = aux.Pai.Nome + "/" + retorno;
                 aux = aux.Pai;
             }
@@ -87,13 +87,12 @@ namespace SistOp.DataStructure
             DataControl DC = new DataControl();
             //Se raiz não existir, cria uma nova raiz
 
-            if (existeArquivo(Nome,Pai))
+            if (existeArquivo(Nome, Pai))
             {
                 return false;
             }
             if (Pai == null)
             {
-
                 Pai = CriaRaiz();
                 Raiz = Pai;
                 DC.Salva(Raiz.Nome, Raiz.IsDir, Raiz.Conteudo, null, Raiz.DirID, Raiz.PaiID);
@@ -101,12 +100,12 @@ namespace SistOp.DataStructure
             //
             if (type == DataControl.IsDirectory.A)
             {
-                aux = new Arquivo(Nome, Pai, DataControl.IsDirectory.A, -1,Pai.DirID,"");
+                aux = new Arquivo(Nome, Pai, DataControl.IsDirectory.A, -1, Pai.DirID, "");
                 Pai.Filhos.Add(aux);
             }
             else if (type == DataControl.IsDirectory.D)
             {
-                aux = new Arquivo(Nome, Pai, DataControl.IsDirectory.D, countID++,Pai.DirID,"");
+                aux = new Arquivo(Nome, Pai, DataControl.IsDirectory.D, countID++, Pai.DirID, "");
                 Pai.Filhos.Add(aux);
             }
 
@@ -118,21 +117,21 @@ namespace SistOp.DataStructure
             return true;
         }
 
-        public Arquivo Inserir(string Nome, DataControl.IsDirectory type, long DirID, long PaiID,string conteudo)
+        public Arquivo Inserir(string Nome, DataControl.IsDirectory type, long DirID, long PaiID, string conteudo, Permissions permissions)
         {
             Arquivo aux = null;
             DataControl DC = new DataControl();
             //Se raiz não existir, cria uma nova raiz
 
-                        //
+            //
             if (type == DataControl.IsDirectory.A)
             {
-                aux = new Arquivo(Nome, null, type, -1, PaiID,conteudo);
+                aux = new Arquivo(Nome, null, type, -1, PaiID, conteudo, permissions);
                 FileList.Add(aux);
             }
             else if (type == DataControl.IsDirectory.D)
             {
-                aux = new Arquivo(Nome, null, type, DirID, PaiID,conteudo);
+                aux = new Arquivo(Nome, null, type, DirID, PaiID, conteudo, permissions);
                 FileList.Add(aux);
 
             }
@@ -165,7 +164,6 @@ namespace SistOp.DataStructure
 
         public void recuperaArvore()
         {
-
             DataControl DC = new DataControl();
             string Dados = DC.Recupera();
             string aux = "";
@@ -179,54 +177,31 @@ namespace SistOp.DataStructure
             }
             if (Dados != "")
             {
-
                 Dados = Dados.Trim('@');
-                auxFiles = Dados.Split('@');
+                auxFiles = Dados.Split(new char[] { '@' }, StringSplitOptions.RemoveEmptyEntries);
 
                 foreach (string c in auxFiles)
                 {
-                    //if (novoArquivo && c != '@')
-                    //{
-                    //    aux += c;
-                    //}
-                    //if (c == '@' && !novoArquivo)
-                    //{
-                    //    novoArquivo = true;
-                    //    aux = "";
-                    //    //@|isdir|Nome|HashID|<conteudo>|
 
-                    //}
-                    //else if (c == '@' && novoArquivo)
-                    if (c != "")
+
+
+
+                    aux = c.Trim('|');
+                    aux1 = aux.Split('|');
+
+                    Arquivo arq = Inserir(aux1[1], (DataControl.IsDirectory)Enum.Parse(typeof(DataControl.IsDirectory), aux1[0]), long.Parse(aux1[2]), long.Parse(aux1[3]), aux1[4].Trim(new char[] { '<', '>' }), new Permissions(aux1[5]));
+                    if (arq.DirID == 0)
                     {
-                        //novoArquivo = false;
-                        aux = c.Trim('|');
-                        aux1 = aux.Split('|');
-                        DataControl.IsDirectory tip;
-                        if (aux1[0] == DataControl.IsDirectory.D.ToString())
+                        Raiz = arq;
+                    }
+                    foreach (Arquivo a in this.FileList)
+                    {
+                        if (a.DirID == arq.PaiID)
                         {
-                            tip = DataControl.IsDirectory.D;
-
-                        }
-                        else
-                        {
-                            tip = DataControl.IsDirectory.A;
-
+                            arq.Pai = a;
+                            a.Filhos.Add(arq);
                         }
 
-                        Arquivo arq = Inserir(aux1[1], tip, long.Parse(aux1[2]), long.Parse(aux1[3]),aux1[4].Trim(new char[] {'<','>'}));
-                        if (arq.DirID == 0)
-                        {
-                            Raiz = arq;
-                        }
-                        foreach (Arquivo a in this.FileList)
-                        {
-                            if (a.DirID == arq.PaiID)
-                            {
-                                arq.Pai = a;
-                                a.Filhos.Add(arq);
-                            }
-                        }
                     }
                 }
 

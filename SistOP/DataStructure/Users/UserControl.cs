@@ -1,19 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-
 using System.Text;
 using System.Text.RegularExpressions;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-namespace SistOp.DataStructure
+
+
+namespace SistOp.DataStructure.Users
 {
-    class DataControl
+    class UserControl
     {
-        private const string FILE_NAME = "FileSystem.bin";
+        private const string FILE_NAME = "FileSystemU.bin";
         //private const string COUNT_FILE_NAME = "count.dat";
-        public enum IsDirectory { D, A }
+        public enum UserType { U, A }
         private string dados = "";
 
 
@@ -27,14 +28,10 @@ namespace SistOp.DataStructure
             return false;
         }
 
-        private string addSeparadordeConteudo(string conteudo)
-        {
-            return "<" + conteudo + ">";
 
-        }
-        public string genStringFile(Arquivo Atual)
+        public string genStringFile(User user)
         {
-            return genStringFile(Atual.Nome, Atual.IsDir, Atual.Conteudo, Atual.Pai, Atual.DirID, Atual.PaiID, Atual.Permissao);
+            return genStringFile(user.Usuario, user.Senha, user.UserType, user.Acessos);
         }
         //public string genStringFile(string nome, IsDirectory diretorio, string conteudo, Arquivo Pai, long dirID, long paiID)
         //{
@@ -62,39 +59,49 @@ namespace SistOp.DataStructure
         //    retorno += addSeparadordeConteudo(conteudo) + "|@";
         //    return retorno;
         //}
-        public string genStringFile(string nome, IsDirectory diretorio, string conteudo, Arquivo Pai, long dirID, long paiID, Permissions permissao)
+        public string genStringFile(string nome, string Senha, UserType UserType, List<long> Acessos)
         {
-
-
             string retorno = "";
+            string permissoes = "";
+            if (Acessos != null)
+            {
 
+
+                foreach (long acesso in Acessos)
+                {
+                    permissoes += acesso.ToString() + "-";
+                }
+                permissoes = permissoes.Trim('-');
+            }
             //Indica inicio de arquivo.
             //@|isdir|Permissao|Nome|DirID|PaiID|<conteudo>|@
             retorno += "@|";
 
-            //Adiciona validador de diretório
-            retorno += diretorio.ToString() + "|";
-
-            //Adiciona nome do arquivo
+            //Adiciona nome de usuario
             retorno += nome + "|";
 
-            //Adiciona hashID do arquivo
-            retorno += dirID + "|";
+            //Adiciona senha do usuario
+            retorno += Senha + "|";
 
-            //Adiciona hashID do pai do arquivo
-            retorno += paiID + "|";
+            //Adiciona permissoes
+            retorno += permissoes + "|@";
 
-            //Adiciona conteudo entre <>
-            retorno += addSeparadordeConteudo(conteudo) + "|";
-            //
-            retorno += permissao.ToString() + "|@";
+
             return retorno;
 
         }
-        public void Salva(string nome, IsDirectory Diretorio, string conteudo, Arquivo Pai, long dirID, long paiID)
+
+        /// <summary>
+        /// Salva o novo usuário no banco.
+        /// </summary>
+        /// <param name="nome">Nome</param>
+        /// <param name="Senha">Senha</param>
+        /// <param name="TipoUsuario">A. Administrador, U. Usuario</param>
+        /// <param name="acessos">Acessos permitidos ao usuário</param>
+        public void Salva(string nome, string Senha, UserType TipoUsuario, List<long> acessos)
         {
             string dados = Recupera();
-            //MessageBox.Show(HashNome);
+
             FileStream fs;
             BinaryWriter w;
 
@@ -109,7 +116,8 @@ namespace SistOp.DataStructure
                 w = new BinaryWriter(fs);
             }
 
-            dados += genStringFile(nome, Diretorio, conteudo, Pai, dirID, paiID, new Permissions());
+            dados += genStringFile(nome, Senha, TipoUsuario, acessos); ;
+         
             //Salva a String de arquivo em disco
             w.Write(dados);
 
@@ -117,7 +125,11 @@ namespace SistOp.DataStructure
             fs.Close();
             w.Close();
         }
-        public void Atualiza(Arquivo Atual, Arquivo Atualizado)
+        public void Salva(User Aux)
+        {
+            Salva(Aux.Usuario, Aux.Senha, Aux.UserType, Aux.Acessos);
+        }
+        public void Atualiza(User Atual, User Atualizado)
         {
 
             this.dados = Recupera();
@@ -145,7 +157,35 @@ namespace SistOp.DataStructure
             w.Close();
             fs.Close();
         }
+        private List<long> RecuperaAcessos(string[] Acessos)
+        {
+            List<long> lista = new List<long>();
+            foreach (string str in Acessos)
+            {
+                lista.Add(long.Parse(str));
+            }
 
+            return lista;
+        }
+        public List<User> RecuperaLista()
+        {
+            List<User> list = new List<User>();
+
+            string dados = Recupera();
+            string[] usuarios = dados.Split(new char[] { '@' }, StringSplitOptions.RemoveEmptyEntries);
+            string[] aux;
+            string str1;
+            foreach (string str in usuarios)
+            {
+                str1 = str.Trim('|');
+                aux = str1.Split(new char[] { '|' });
+                string[] acesso = aux[3].Split(new char[] { '-' });
+                list.Add(new User(aux[0], aux[1], (UserType)Enum.Parse(typeof(UserType), aux[2]), RecuperaAcessos(acesso)));
+            }
+
+            return list;
+
+        }
         public string Recupera()
         {
             string t = "";
@@ -164,12 +204,12 @@ namespace SistOp.DataStructure
             }
             return t;
         }
-        public void remove(Arquivo Excluir)
+        public void remove(User Excluir)
         {
             this.dados = Recupera();
 
             Remover(dados, Excluir);
-            Excluir.Pai.Filhos.Remove(Excluir);
+
             FileStream fs;
             BinaryWriter w;
 
@@ -192,7 +232,7 @@ namespace SistOp.DataStructure
             fs.Close();
         }
 
-        private void Remover(string dados,Arquivo Excluir)
+        private void Remover(string dados, User Excluir)
         {
 
             string aux = genStringFile(Excluir);
@@ -201,20 +241,10 @@ namespace SistOp.DataStructure
             if (index != -1)
             {
                 this.dados = this.dados.Remove(index, aux.Length);
-                foreach (Arquivo e in Excluir.Filhos)
-                {
-
-                    Remover(this.dados, e);
-
-                }
-                if (Excluir.Filhos.Count > 0)
-                {
-                    Excluir.Filhos.Clear();
-                }
-
             }
-
-
         }
+
+       
+
     }
 }

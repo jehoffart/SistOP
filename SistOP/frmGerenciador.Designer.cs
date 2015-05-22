@@ -1,6 +1,6 @@
 ﻿namespace SistOp
 {
-    partial class Form1
+    partial class frmGerenciador
     {
         /// <summary>
         /// Required designer variable.
@@ -131,7 +131,7 @@
             this.btnNewFile.UseVisualStyleBackColor = true;
             this.btnNewFile.Click += new System.EventHandler(this.btnNewFile_Click);
             // 
-            // Form1
+            // frmGerenciador
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -143,8 +143,8 @@
             this.Controls.Add(this.txtCaminho);
             this.Controls.Add(this.btnVoltar);
             this.Controls.Add(this.btnNovaPasta);
-            this.Name = "Form1";
-            this.Text = "Form1";
+            this.Name = "frmGerenciador";
+            this.Text = "Gerenciador de Arquivos";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.MaximumSizeChanged += new System.EventHandler(this.Form1_ResizeEnd);
             this.MinimumSizeChanged += new System.EventHandler(this.Form1_ResizeEnd);

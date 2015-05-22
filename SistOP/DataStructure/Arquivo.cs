@@ -11,14 +11,20 @@ namespace SistOp.DataStructure
         #region Atributos
 
         private string nome;
-        
+        private Permissions permissao;
         private DataControl.IsDirectory isDir;
         private string conteudo;
         private List<Arquivo> filhos;
         private Arquivo pai;
-        
+
         private long dirID;
         private long paiID;
+
+        public Permissions Permissao
+        {
+            get { return permissao; }
+            set { permissao = value; }
+        }
 
         /// <summary>
         /// Diretório onde se encontra o arquivo/Diretorio filho.
@@ -86,7 +92,7 @@ namespace SistOp.DataStructure
         }
         #endregion
         /// <summary>
-        /// Inicializa o arquivo
+        /// Inicializa o arquivo sem conteúdo
         /// </summary>
         /// <param name="Nome">Nome do arquivo</param>
         /// <param name="pai">Diretorio pai</param>
@@ -99,9 +105,10 @@ namespace SistOp.DataStructure
             this.Filhos = new List<Arquivo>();
             this.dirID = dirID;
             this.conteudo = "";
-           
+
         }
-        public Arquivo(string Nome, Arquivo pai, DataControl.IsDirectory Diretorio, long dirID, long paiID,string Conteudo)
+
+        public Arquivo(string Nome, Arquivo pai, DataControl.IsDirectory Diretorio, long dirID, long paiID, string Conteudo)
         {
             this.Nome = Nome;
             this.Pai = pai;
@@ -110,6 +117,17 @@ namespace SistOp.DataStructure
             this.dirID = dirID;
             this.paiID = paiID;
             this.conteudo = Conteudo;
+        }
+        public Arquivo(string Nome, Arquivo pai, DataControl.IsDirectory Diretorio, long dirID, long paiID, string Conteudo, Permissions permissao)
+        {
+            this.Nome = Nome;
+            this.Pai = pai;
+            this.isDir = Diretorio;
+            this.Filhos = new List<Arquivo>();
+            this.dirID = dirID;
+            this.paiID = paiID;
+            this.conteudo = Conteudo;
+            this.permissao = permissao;
         }
         public Arquivo(Arquivo Arquivo)
         {
@@ -120,6 +138,10 @@ namespace SistOp.DataStructure
             this.dirID = Arquivo.dirID;
             this.paiID = Arquivo.paiID;
             this.conteudo = Arquivo.Conteudo;
+            this.permissao = Arquivo.permissao;
         }
+
+
+
     }
 }

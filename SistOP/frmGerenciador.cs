@@ -12,7 +12,7 @@ using SistOp.DataStructure;
 
 namespace SistOp
 {
-    public partial class Form1 : Form
+    public partial class frmGerenciador : Form
     {
         string texto = "";
         private Arquivo dirAberto, FileAberto;
@@ -21,7 +21,7 @@ namespace SistOp
         PictureBox Clicado;
         ImageList IL = new ImageList();
         int Id = 0;
-        public Form1()
+        public frmGerenciador()
         {
             InitializeComponent();
             FileSystem.recuperaArvore();
@@ -59,11 +59,11 @@ namespace SistOp
             {
                 if (a.IsDir == DataControl.IsDirectory.D)
                 {
-                    treeNode.Nodes.Add(a.Nome, a.Nome, 1,1);
+                    treeNode.Nodes.Add(a.Nome, a.Nome, 1, 1);
                 }
                 else
                 {
-                    treeNode.Nodes.Add(a.Nome, a.Nome, 0,0);
+                    treeNode.Nodes.Add(a.Nome, a.Nome, 0, 0);
                 }
                 Tree(treeNode.Nodes[count++], a);
             }
@@ -346,6 +346,8 @@ namespace SistOp
             txt.Name = "txtNovaPasta";
             txt.KeyUp += txt_KeyUp;
             txt.KeyPress += txt_KeyPress;
+            txt.Text = "Nova Pasta";
+            
             txt.Location = new System.Drawing.Point((img1.Location.X), img1.Location.Y + img1.Size.Height + 10);
             txt.Size = new System.Drawing.Size(img1.Size.Width, txt.Size.Height);
             this.Controls.Add(txt);
@@ -406,7 +408,7 @@ namespace SistOp
         {
             Arquivo remove = FileSystem.ProcuraFilho(Clicado.Name, dirAberto);
             DataControl DC = new DataControl();
-            DC.remove(remove.Nome, remove.IsDir, remove.Conteudo, remove, remove.DirID, remove.PaiID);
+            DC.remove(remove);
             LimpaLayout(dirAberto, true);
         }
 
