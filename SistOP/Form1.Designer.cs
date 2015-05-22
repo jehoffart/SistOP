@@ -39,6 +39,7 @@
             this.excluirToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.treeView1 = new System.Windows.Forms.TreeView();
+            this.btnNewFile = new System.Windows.Forms.Button();
             this.sstrip.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -55,7 +56,7 @@
             // 
             // btnVoltar
             // 
-            this.btnVoltar.Location = new System.Drawing.Point(774, 12);
+            this.btnVoltar.Location = new System.Drawing.Point(867, 12);
             this.btnVoltar.Name = "btnVoltar";
             this.btnVoltar.Size = new System.Drawing.Size(75, 23);
             this.btnVoltar.TabIndex = 0;
@@ -117,11 +118,22 @@
             this.treeView1.TabIndex = 4;
             this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
             // 
+            // btnNewFile
+            // 
+            this.btnNewFile.Location = new System.Drawing.Point(774, 12);
+            this.btnNewFile.Name = "btnNewFile";
+            this.btnNewFile.Size = new System.Drawing.Size(87, 23);
+            this.btnNewFile.TabIndex = 5;
+            this.btnNewFile.Text = "Novo Arquivo";
+            this.btnNewFile.UseVisualStyleBackColor = true;
+            this.btnNewFile.Click += new System.EventHandler(this.btnNewFile_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1189, 508);
+            this.Controls.Add(this.btnNewFile);
             this.Controls.Add(this.treeView1);
             this.Controls.Add(this.sstrip);
             this.Controls.Add(this.button3);
@@ -157,6 +169,7 @@
         private System.Windows.Forms.ToolStripMenuItem excluirToolStripMenuItem;
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.TreeView treeView1;
+        private System.Windows.Forms.Button btnNewFile;
     }
 }
 

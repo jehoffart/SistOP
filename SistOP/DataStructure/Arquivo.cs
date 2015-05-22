@@ -13,7 +13,7 @@ namespace SistOp.DataStructure
         private string nome;
         
         private DataControl.IsDirectory isDir;
-         private string conteudo;
+        private string conteudo;
         private List<Arquivo> filhos;
         private Arquivo pai;
 
@@ -99,7 +99,7 @@ namespace SistOp.DataStructure
             this.Filhos = new List<Arquivo>();
             this.dirID = dirID;
         }
-        public Arquivo(string Nome, Arquivo pai, DataControl.IsDirectory Diretorio, long dirID, long paiID)
+        public Arquivo(string Nome, Arquivo pai, DataControl.IsDirectory Diretorio, long dirID, long paiID,string Conteudo)
         {
             this.Nome = Nome;
             this.Pai = pai;
@@ -107,6 +107,7 @@ namespace SistOp.DataStructure
             this.Filhos = new List<Arquivo>();
             this.dirID = dirID;
             this.paiID = paiID;
+            this.conteudo = Conteudo;
         }
     }
 }
