@@ -74,7 +74,7 @@ namespace SistOp.DataStructure.Users
                 permissoes = permissoes.Trim('-');
             }
             //Indica inicio de arquivo.
-            //@|isdir|Permissao|Nome|DirID|PaiID|<conteudo>|@
+             
             retorno += "@|";
 
             //Adiciona nome de usuario
@@ -84,9 +84,10 @@ namespace SistOp.DataStructure.Users
             retorno += Senha + "|";
 
             //Adiciona permissoes
-            retorno += permissoes + "|@";
+            retorno += permissoes + "|";
 
-
+            //Tipo de Usuario
+            retorno += UserType.ToString()+"|@";
             return retorno;
 
         }
@@ -179,8 +180,8 @@ namespace SistOp.DataStructure.Users
             {
                 str1 = str.Trim('|');
                 aux = str1.Split(new char[] { '|' });
-                string[] acesso = aux[3].Split(new char[] { '-' });
-                list.Add(new User(aux[0], aux[1], (UserType)Enum.Parse(typeof(UserType), aux[2]), RecuperaAcessos(acesso)));
+                string[] acesso = aux[2].Split(new char[] { '-' });
+                list.Add(new User(aux[0], aux[1], (UserType)Enum.Parse(typeof(UserType), aux[3]), RecuperaAcessos(acesso)));
             }
 
             return list;

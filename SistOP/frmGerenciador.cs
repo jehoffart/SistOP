@@ -193,7 +193,7 @@ namespace SistOp
 
                 if (e.Button == MouseButtons.Right)
                 {
-                    contextMenuStrip1.Show(sender as Control, e.X, e.Y);
+                    contxtMenuStrip.Show(sender as Control, e.X, e.Y);
                     Clicado = sender as PictureBox;
                 }
                 else if (e.Button == MouseButtons.Left)
@@ -347,7 +347,7 @@ namespace SistOp
             txt.KeyUp += txt_KeyUp;
             txt.KeyPress += txt_KeyPress;
             txt.Text = "Nova Pasta";
-            
+
             txt.Location = new System.Drawing.Point((img1.Location.X), img1.Location.Y + img1.Size.Height + 10);
             txt.Size = new System.Drawing.Size(img1.Size.Width, txt.Size.Height);
             this.Controls.Add(txt);
@@ -392,10 +392,8 @@ namespace SistOp
 
                     LimpaLayout(dirAberto, true);
                     btnNovaPasta.Enabled = true;
-                    if (isDir == DataControl.IsDirectory.D)
-                    {
-                        CriaTree(FileSystem.Raiz);
-                    }
+                    CriaTree(FileSystem.Raiz);
+
                 }
                 else
                 {
@@ -449,6 +447,19 @@ namespace SistOp
             this.Controls.Add(txt);
             txt.Focus();
             this.ResumeLayout(false);
+        }
+
+        private void propriedadesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            PictureBox pb = Clicado;
+            Arquivo Propriedades =  FileSystem.ProcuraFilho(pb.Name, dirAberto);
+            frmPropriedades frm = new frmPropriedades(Propriedades,FileSystem);
+            frm.ShowDialog();
+        }
+
+        private void frmGerenciador_FormClosed(object sender, FormClosedEventArgs e)
+        {
+           
         }
 
 

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace SistOp.DataStructure
 {
-    class Arvore
+    public class Arvore
     {
 
         private Arquivo raiz;
@@ -34,8 +34,8 @@ namespace SistOp.DataStructure
         public Arquivo CriaRaiz()
         {
             DataControl DC = new DataControl();
-            Arquivo aux = new Arquivo("Raiz", null, DataControl.IsDirectory.D, countID++, -1, "");
-            DC.Salva(aux.Nome, aux.IsDir, aux.Conteudo, null, aux.DirID, aux.PaiID);
+            Arquivo aux = new Arquivo("Raiz", null, DataControl.IsDirectory.D, countID++, -1, "",new Permissions("777"),DateTime.Now,DateTime.Now);
+            DC.Salva(aux);
             return aux;
         }
         public string CaminhoAteRaiz(Arquivo atual)
@@ -95,29 +95,29 @@ namespace SistOp.DataStructure
             {
                 Pai = CriaRaiz();
                 Raiz = Pai;
-                DC.Salva(Raiz.Nome, Raiz.IsDir, Raiz.Conteudo, null, Raiz.DirID, Raiz.PaiID);
+//                DC.Salva(Raiz.Nome, Raiz.IsDir, Raiz.Conteudo, null, Raiz.DirID, Raiz.PaiID, DateTime.Now, DateTime.Now);
             }
             //
             if (type == DataControl.IsDirectory.A)
             {
-                aux = new Arquivo(Nome, Pai, DataControl.IsDirectory.A, -1, Pai.DirID, "");
+                aux = new Arquivo(Nome, Pai, DataControl.IsDirectory.A, -1, Pai.DirID, "", new Permissions("777"), DateTime.Now, DateTime.Now);
                 Pai.Filhos.Add(aux);
             }
             else if (type == DataControl.IsDirectory.D)
             {
-                aux = new Arquivo(Nome, Pai, DataControl.IsDirectory.D, countID++, Pai.DirID, "");
+                aux = new Arquivo(Nome, Pai, DataControl.IsDirectory.D, countID++, Pai.DirID, "", new Permissions("777"), DateTime.Now, DateTime.Now);
                 Pai.Filhos.Add(aux);
             }
 
             if (aux != null)
             {
                 FileList.Add(aux);
-                DC.Salva(aux.Nome, aux.IsDir, aux.Conteudo, Pai, aux.DirID, Pai.DirID);
+                DC.Salva(aux);
             }
             return true;
         }
 
-        public Arquivo Inserir(string Nome, DataControl.IsDirectory type, long DirID, long PaiID, string conteudo, Permissions permissions)
+        public Arquivo Inserir(string Nome, DataControl.IsDirectory type, long DirID, long PaiID, string conteudo, Permissions permissions, DateTime Criacao, DateTime Alteracao)
         {
             Arquivo aux = null;
             DataControl DC = new DataControl();
@@ -126,12 +126,12 @@ namespace SistOp.DataStructure
             //
             if (type == DataControl.IsDirectory.A)
             {
-                aux = new Arquivo(Nome, null, type, -1, PaiID, conteudo, permissions);
+                aux = new Arquivo(Nome, null, type, -1, PaiID, conteudo, permissions, Criacao, Alteracao);
                 FileList.Add(aux);
             }
             else if (type == DataControl.IsDirectory.D)
             {
-                aux = new Arquivo(Nome, null, type, DirID, PaiID, conteudo, permissions);
+                aux = new Arquivo(Nome, null, type, DirID, PaiID, conteudo, permissions, Criacao, Alteracao);
                 FileList.Add(aux);
 
             }
@@ -182,14 +182,13 @@ namespace SistOp.DataStructure
 
                 foreach (string c in auxFiles)
                 {
-
-
-
-
                     aux = c.Trim('|');
                     aux1 = aux.Split('|');
 
-                    Arquivo arq = Inserir(aux1[1], (DataControl.IsDirectory)Enum.Parse(typeof(DataControl.IsDirectory), aux1[0]), long.Parse(aux1[2]), long.Parse(aux1[3]), aux1[4].Trim(new char[] { '<', '>' }), new Permissions(aux1[5]));
+                    Arquivo arq = Inserir(aux1[1], (DataControl.IsDirectory)Enum.Parse(typeof(DataControl.IsDirectory), 
+                        aux1[0]), long.Parse(aux1[2]), long.Parse(aux1[3]), aux1[4].Trim(new char[] { '<', '>' }), 
+                            new Permissions(aux1[5]),DateTime.Parse(aux1[6]),DateTime.Parse(aux1[7]));
+
                     if (arq.DirID == 0)
                     {
                         Raiz = arq;

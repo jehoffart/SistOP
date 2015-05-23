@@ -19,7 +19,9 @@ namespace SistOp.DataStructure.Users
             usuarios = DC.RecuperaLista();
             if (usuarios.Count == 0)
             {
-                CadastrarNovoUser("Admin", "Admin", UserControl.UserType.A, new List<long>());
+                List<long> lista =  new List<long>();
+                lista.Add(0);
+                CadastrarNovoUser("Admin", "Admin", UserControl.UserType.A, lista);
             }
         }
 

@@ -24,7 +24,7 @@ namespace SistOp
             {
                 MessageBox.Show("Login Ok");
                 new frmGerenciador().Show();
-                
+                this.Hide();
             }
             else
             {

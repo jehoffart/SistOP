@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 namespace SistOp.DataStructure
 {
-    class DataControl
+    public class DataControl
     {
         private const string FILE_NAME = "FileSystem.bin";
         //private const string COUNT_FILE_NAME = "count.dat";
@@ -34,7 +34,7 @@ namespace SistOp.DataStructure
         }
         public string genStringFile(Arquivo Atual)
         {
-            return genStringFile(Atual.Nome, Atual.IsDir, Atual.Conteudo, Atual.Pai, Atual.DirID, Atual.PaiID, Atual.Permissao);
+            return genStringFile(Atual.Nome, Atual.IsDir, Atual.Conteudo, Atual.Pai, Atual.DirID, Atual.PaiID, Atual.Permissao,Atual.DataCriacao,Atual.UltimaAlteracao);
         }
         //public string genStringFile(string nome, IsDirectory diretorio, string conteudo, Arquivo Pai, long dirID, long paiID)
         //{
@@ -62,11 +62,9 @@ namespace SistOp.DataStructure
         //    retorno += addSeparadordeConteudo(conteudo) + "|@";
         //    return retorno;
         //}
-        public string genStringFile(string nome, IsDirectory diretorio, string conteudo, Arquivo Pai, long dirID, long paiID, Permissions permissao)
+        public string genStringFile(string nome, IsDirectory diretorio, string conteudo, Arquivo Pai, long dirID, long paiID, Permissions permissao, DateTime Criacao, DateTime Alteracao)
         {
-
-
-            string retorno = "";
+string retorno = "";
 
             //Indica inicio de arquivo.
             //@|isdir|Permissao|Nome|DirID|PaiID|<conteudo>|@
@@ -87,11 +85,22 @@ namespace SistOp.DataStructure
             //Adiciona conteudo entre <>
             retorno += addSeparadordeConteudo(conteudo) + "|";
             //
-            retorno += permissao.ToString() + "|@";
+            retorno += permissao.ToString() + "|";
+
+            //Adiciona a data de Criação
+            retorno += Criacao.ToString() + "|";
+            //Adiciona a data de Alteração
+            retorno += Alteracao.ToString() + "|@";
+
+
             return retorno;
 
         }
-        public void Salva(string nome, IsDirectory Diretorio, string conteudo, Arquivo Pai, long dirID, long paiID)
+        public void Salva(Arquivo aux)
+        {
+            Salva(aux.Nome, aux.IsDir, aux.Conteudo, aux.Pai, aux.DirID, aux.PaiID, aux.DataCriacao, aux.UltimaAlteracao);
+        }
+        public void Salva(string nome, IsDirectory Diretorio, string conteudo, Arquivo Pai, long dirID, long paiID, DateTime Criacao, DateTime Alteracao)
         {
             string dados = Recupera();
             //MessageBox.Show(HashNome);
@@ -109,7 +118,7 @@ namespace SistOp.DataStructure
                 w = new BinaryWriter(fs);
             }
 
-            dados += genStringFile(nome, Diretorio, conteudo, Pai, dirID, paiID, new Permissions());
+            dados += genStringFile(nome, Diretorio, conteudo, Pai, dirID, paiID, new Permissions(),Criacao,Alteracao);
             //Salva a String de arquivo em disco
             w.Write(dados);
 
@@ -192,7 +201,7 @@ namespace SistOp.DataStructure
             fs.Close();
         }
 
-        private void Remover(string dados,Arquivo Excluir)
+        private void Remover(string dados, Arquivo Excluir)
         {
 
             string aux = genStringFile(Excluir);

@@ -35,13 +35,15 @@
             this.button3 = new System.Windows.Forms.Button();
             this.sstrip = new System.Windows.Forms.StatusStrip();
             this.tsslabel = new System.Windows.Forms.ToolStripStatusLabel();
-            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.contxtMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.excluirToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.twvListaPastas = new System.Windows.Forms.TreeView();
             this.btnNewFile = new System.Windows.Forms.Button();
+            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
+            this.propriedadesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.sstrip.SuspendLayout();
-            this.contextMenuStrip1.SuspendLayout();
+            this.contxtMenuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnNovaPasta
@@ -97,17 +99,19 @@
             this.tsslabel.Size = new System.Drawing.Size(33, 17);
             this.tsslabel.Text = "Raiz/";
             // 
-            // contextMenuStrip1
+            // contxtMenuStrip
             // 
-            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.excluirToolStripMenuItem});
-            this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(109, 26);
+            this.contxtMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.excluirToolStripMenuItem,
+            this.toolStripMenuItem1,
+            this.propriedadesToolStripMenuItem});
+            this.contxtMenuStrip.Name = "contextMenuStrip1";
+            this.contxtMenuStrip.Size = new System.Drawing.Size(144, 54);
             // 
             // excluirToolStripMenuItem
             // 
             this.excluirToolStripMenuItem.Name = "excluirToolStripMenuItem";
-            this.excluirToolStripMenuItem.Size = new System.Drawing.Size(108, 22);
+            this.excluirToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.excluirToolStripMenuItem.Text = "Excluir";
             this.excluirToolStripMenuItem.Click += new System.EventHandler(this.excluirToolStripMenuItem_Click);
             // 
@@ -131,6 +135,18 @@
             this.btnNewFile.UseVisualStyleBackColor = true;
             this.btnNewFile.Click += new System.EventHandler(this.btnNewFile_Click);
             // 
+            // toolStripMenuItem1
+            // 
+            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(149, 6);
+            // 
+            // propriedadesToolStripMenuItem
+            // 
+            this.propriedadesToolStripMenuItem.Name = "propriedadesToolStripMenuItem";
+            this.propriedadesToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.propriedadesToolStripMenuItem.Text = "Propriedades";
+            this.propriedadesToolStripMenuItem.Click += new System.EventHandler(this.propriedadesToolStripMenuItem_Click);
+            // 
             // frmGerenciador
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -148,13 +164,14 @@
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.MaximumSizeChanged += new System.EventHandler(this.Form1_ResizeEnd);
             this.MinimumSizeChanged += new System.EventHandler(this.Form1_ResizeEnd);
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmGerenciador_FormClosed);
             this.Load += new System.EventHandler(this.Form1_Load);
             this.ResizeEnd += new System.EventHandler(this.Form1_ResizeEnd);
             this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyUp);
             this.Resize += new System.EventHandler(this.Form1_Resize);
             this.sstrip.ResumeLayout(false);
             this.sstrip.PerformLayout();
-            this.contextMenuStrip1.ResumeLayout(false);
+            this.contxtMenuStrip.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -168,11 +185,13 @@
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.StatusStrip sstrip;
         private System.Windows.Forms.ToolStripStatusLabel tsslabel;
-        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+        private System.Windows.Forms.ContextMenuStrip contxtMenuStrip;
         private System.Windows.Forms.ToolStripMenuItem excluirToolStripMenuItem;
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.TreeView twvListaPastas;
         private System.Windows.Forms.Button btnNewFile;
+        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem propriedadesToolStripMenuItem;
     }
 }
 

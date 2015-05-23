@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SistOp.DataStructure
 {
-    class Arquivo
+    public class Arquivo
     {
         #region Atributos
 
@@ -16,10 +16,21 @@ namespace SistOp.DataStructure
         private string conteudo;
         private List<Arquivo> filhos;
         private Arquivo pai;
-
+        private DateTime dataCriacao;
+        private DateTime ultimaAlteracao;
         private long dirID;
         private long paiID;
 
+        public DateTime UltimaAlteracao
+        {
+            get { return ultimaAlteracao; }
+            set { ultimaAlteracao = value; }
+        }
+        public DateTime DataCriacao
+        {
+            get { return dataCriacao; }
+            set { dataCriacao = value; }
+        }
         public Permissions Permissao
         {
             get { return permissao; }
@@ -118,7 +129,7 @@ namespace SistOp.DataStructure
             this.paiID = paiID;
             this.conteudo = Conteudo;
         }
-        public Arquivo(string Nome, Arquivo pai, DataControl.IsDirectory Diretorio, long dirID, long paiID, string Conteudo, Permissions permissao)
+        public Arquivo(string Nome, Arquivo pai, DataControl.IsDirectory Diretorio, long dirID, long paiID, string Conteudo, Permissions permissao,DateTime Criacao, DateTime Alteracao)
         {
             this.Nome = Nome;
             this.Pai = pai;
@@ -128,6 +139,8 @@ namespace SistOp.DataStructure
             this.paiID = paiID;
             this.conteudo = Conteudo;
             this.permissao = permissao;
+            this.dataCriacao = Criacao;
+            this.ultimaAlteracao = Alteracao;
         }
         public Arquivo(Arquivo Arquivo)
         {
@@ -139,6 +152,8 @@ namespace SistOp.DataStructure
             this.paiID = Arquivo.paiID;
             this.conteudo = Arquivo.Conteudo;
             this.permissao = Arquivo.permissao;
+            this.dataCriacao = Arquivo.DataCriacao;
+            this.ultimaAlteracao = Arquivo.ultimaAlteracao;
         }
 
 

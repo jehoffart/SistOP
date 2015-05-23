@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SistOp.DataStructure
 {
-    class Permissions
+   public class Permissions
     {
         /// <summary>
         /// Libera as permissões conforme abaixo:
@@ -68,7 +68,7 @@ namespace SistOp.DataStructure
         }
         public PermissionsType ConvertToPermissionType (char permission)
         {
-            if (permission >'0' && permission <= '7')
+            if (permission >='0' && permission <= '7')
             {
             return (PermissionsType)Enum.Parse(typeof(PermissionsType), permission.ToString());    
             }
