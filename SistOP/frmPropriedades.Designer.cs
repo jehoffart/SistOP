@@ -167,6 +167,7 @@
             this.chkUsrRead.TabIndex = 0;
             this.chkUsrRead.Text = "Leitura";
             this.chkUsrRead.UseVisualStyleBackColor = true;
+            this.chkUsrRead.CheckedChanged += new System.EventHandler(this.chkUsrRead_CheckedChanged);
             // 
             // chkUsrWrite
             // 
@@ -177,6 +178,7 @@
             this.chkUsrWrite.TabIndex = 0;
             this.chkUsrWrite.Text = "Gravação";
             this.chkUsrWrite.UseVisualStyleBackColor = true;
+            this.chkUsrWrite.CheckedChanged += new System.EventHandler(this.chkUsrWrite_CheckedChanged);
             // 
             // chkUsrExec
             // 
@@ -187,6 +189,7 @@
             this.chkUsrExec.TabIndex = 0;
             this.chkUsrExec.Text = "Execução";
             this.chkUsrExec.UseVisualStyleBackColor = true;
+            this.chkUsrExec.CheckedChanged += new System.EventHandler(this.chkUsrExec_CheckedChanged);
             // 
             // groupBox3
             // 
@@ -209,6 +212,7 @@
             this.chkGroupExec.TabIndex = 0;
             this.chkGroupExec.Text = "Execução";
             this.chkGroupExec.UseVisualStyleBackColor = true;
+            this.chkGroupExec.CheckedChanged += new System.EventHandler(this.chkGroupExec_CheckedChanged);
             // 
             // chkGroupWrite
             // 
@@ -219,6 +223,7 @@
             this.chkGroupWrite.TabIndex = 0;
             this.chkGroupWrite.Text = "Gravação";
             this.chkGroupWrite.UseVisualStyleBackColor = true;
+            this.chkGroupWrite.CheckedChanged += new System.EventHandler(this.chkGroupWrite_CheckedChanged);
             // 
             // chkGroupRead
             // 
@@ -229,6 +234,7 @@
             this.chkGroupRead.TabIndex = 0;
             this.chkGroupRead.Text = "Leitura";
             this.chkGroupRead.UseVisualStyleBackColor = true;
+            this.chkGroupRead.CheckedChanged += new System.EventHandler(this.chkGroupRead_CheckedChanged);
             // 
             // groupBox4
             // 
@@ -251,6 +257,7 @@
             this.chkOthersExec.TabIndex = 0;
             this.chkOthersExec.Text = "Execução";
             this.chkOthersExec.UseVisualStyleBackColor = true;
+            this.chkOthersExec.CheckedChanged += new System.EventHandler(this.chkOthersExec_CheckedChanged);
             // 
             // chkOthersWrite
             // 
@@ -261,6 +268,7 @@
             this.chkOthersWrite.TabIndex = 0;
             this.chkOthersWrite.Text = "Gravação";
             this.chkOthersWrite.UseVisualStyleBackColor = true;
+            this.chkOthersWrite.CheckedChanged += new System.EventHandler(this.chkOthersWrite_CheckedChanged);
             // 
             // chkOthersRead
             // 
@@ -271,6 +279,7 @@
             this.chkOthersRead.TabIndex = 0;
             this.chkOthersRead.Text = "Leitura";
             this.chkOthersRead.UseVisualStyleBackColor = true;
+            this.chkOthersRead.CheckedChanged += new System.EventHandler(this.chkOthersRead_CheckedChanged);
             // 
             // frmPropriedades
             // 

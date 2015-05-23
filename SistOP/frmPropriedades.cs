@@ -14,6 +14,7 @@ namespace SistOp
     {
         private Arquivo Propriedades;
         private Arvore FileSystem;
+        private int Usr, Grp, Oth;
         public frmPropriedades()
         {
             InitializeComponent();
@@ -22,6 +23,7 @@ namespace SistOp
         public frmPropriedades(Arquivo Propriedades, Arvore FileSystem)
         {
             InitializeComponent();
+            Usr = Grp = Oth = 0;
             this.Propriedades = Propriedades;
             this.FileSystem = FileSystem;
         }
@@ -71,7 +73,84 @@ namespace SistOp
 
         private void btnFechar_Click(object sender, EventArgs e)
         {
+            
             this.Close();
         }
+
+        private void chkUsrRead_CheckedChanged(object sender, EventArgs e)
+        {
+            if (chkUsrRead.Checked == true)
+                Usr += 4;
+            else
+                Usr -= 4;
+
+        }
+
+        private void chkUsrWrite_CheckedChanged(object sender, EventArgs e)
+        {
+            if (chkUsrWrite.Checked == true)
+                Usr += 2;
+            else
+                Usr -= 2;
+
+        }
+
+        private void chkUsrExec_CheckedChanged(object sender, EventArgs e)
+        {
+            if (chkUsrExec.Checked == true)
+                Usr += 1;
+            else
+                Usr -= 1;
+        }
+
+        private void chkGroupRead_CheckedChanged(object sender, EventArgs e)
+        {
+            if (chkGroupRead.Checked == true)
+                Grp += 4;
+            else
+                Grp -= 4;
+
+        }
+
+        private void chkGroupWrite_CheckedChanged(object sender, EventArgs e)
+        {
+            if (chkGroupWrite.Checked == true)
+                Grp += 2;
+            else
+                Grp -= 2;
+        }
+
+        private void chkGroupExec_CheckedChanged(object sender, EventArgs e)
+        {
+            if (chkGroupExec.Checked == true)
+                Grp += 1;
+            else
+                Grp -= 1;
+        }
+
+        private void chkOthersRead_CheckedChanged(object sender, EventArgs e)
+        {
+            if (chkOthersRead.Checked == true)
+                Oth += 4;
+            else
+                Oth -= 4;
+        }
+
+        private void chkOthersWrite_CheckedChanged(object sender, EventArgs e)
+        {
+            if (chkOthersWrite.Checked == true)
+                Oth += 2;
+            else
+                Oth -= 2;
+        }
+
+        private void chkOthersExec_CheckedChanged(object sender, EventArgs e)
+        {
+            if (chkOthersExec.Checked == true)
+                Oth += 1;
+            else
+                Oth -= 1;
+        }
+        
     }
 }
