@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 namespace SistOp.DataStructure.Users
 {
-    class UserControl
+    public class UserControl
     {
         private const string FILE_NAME = "FileSystemU.bin";
         //private const string COUNT_FILE_NAME = "count.dat";
@@ -31,7 +31,7 @@ namespace SistOp.DataStructure.Users
 
         public string genStringFile(User user)
         {
-            return genStringFile(user.Usuario, user.Senha, user.UserType, user.Acessos);
+            return genStringFile(user.Usuario, user.Senha, user.UserType, user.Acessos, user.Id);
         }
         //public string genStringFile(string nome, IsDirectory diretorio, string conteudo, Arquivo Pai, long dirID, long paiID)
         //{
@@ -59,7 +59,7 @@ namespace SistOp.DataStructure.Users
         //    retorno += addSeparadordeConteudo(conteudo) + "|@";
         //    return retorno;
         //}
-        public string genStringFile(string nome, string Senha, UserType UserType, List<long> Acessos)
+        public string genStringFile(string nome, string Senha, UserType UserType, List<long> Acessos, long ID)
         {
             string retorno = "";
             string permissoes = "";
@@ -74,7 +74,7 @@ namespace SistOp.DataStructure.Users
                 permissoes = permissoes.Trim('-');
             }
             //Indica inicio de arquivo.
-             
+
             retorno += "@|";
 
             //Adiciona nome de usuario
@@ -87,7 +87,11 @@ namespace SistOp.DataStructure.Users
             retorno += permissoes + "|";
 
             //Tipo de Usuario
-            retorno += UserType.ToString()+"|@";
+            retorno += UserType.ToString() + "|";
+
+            //ID do user
+            retorno += ID.ToString() + "|@";
+
             return retorno;
 
         }
@@ -99,7 +103,7 @@ namespace SistOp.DataStructure.Users
         /// <param name="Senha">Senha</param>
         /// <param name="TipoUsuario">A. Administrador, U. Usuario</param>
         /// <param name="acessos">Acessos permitidos ao usuário</param>
-        public void Salva(string nome, string Senha, UserType TipoUsuario, List<long> acessos)
+        public void Salva(string nome, string Senha, UserType TipoUsuario, List<long> acessos, long ID)
         {
             string dados = Recupera();
 
@@ -117,8 +121,8 @@ namespace SistOp.DataStructure.Users
                 w = new BinaryWriter(fs);
             }
 
-            dados += genStringFile(nome, Senha, TipoUsuario, acessos); ;
-         
+            dados += genStringFile(nome, Senha, TipoUsuario, acessos, ID);
+
             //Salva a String de arquivo em disco
             w.Write(dados);
 
@@ -128,7 +132,7 @@ namespace SistOp.DataStructure.Users
         }
         public void Salva(User Aux)
         {
-            Salva(Aux.Usuario, Aux.Senha, Aux.UserType, Aux.Acessos);
+            Salva(Aux.Usuario, Aux.Senha, Aux.UserType, Aux.Acessos, Aux.Id);
         }
         public void Atualiza(User Atual, User Atualizado)
         {
@@ -168,7 +172,7 @@ namespace SistOp.DataStructure.Users
 
             return lista;
         }
-        public List<User> RecuperaLista()
+        public List<User> RecuperaLista(Users usrs)
         {
             List<User> list = new List<User>();
 
@@ -181,7 +185,12 @@ namespace SistOp.DataStructure.Users
                 str1 = str.Trim('|');
                 aux = str1.Split(new char[] { '|' });
                 string[] acesso = aux[2].Split(new char[] { '-' });
-                list.Add(new User(aux[0], aux[1], (UserType)Enum.Parse(typeof(UserType), aux[3]), RecuperaAcessos(acesso)));
+                User UserAux = new User(aux[0], aux[1], (UserType)Enum.Parse(typeof(UserType), aux[3]), RecuperaAcessos(acesso), long.Parse(aux[4]));
+                list.Add(UserAux);
+                if (usrs.CountID < UserAux.Id)
+                {
+                    usrs.CountID = UserAux.Id;
+                }
             }
 
             return list;
@@ -245,7 +254,7 @@ namespace SistOp.DataStructure.Users
             }
         }
 
-       
+
 
     }
 }

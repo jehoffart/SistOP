@@ -8,18 +8,33 @@ using System.Security.Cryptography;
 
 namespace SistOp.DataStructure.Users
 {
-    class Users
+    public class Users
     {
         private List<User> usuarios;
+        private long countID = 0;
+
+        public long CountID
+        {
+            get { return countID; }
+            set { countID = value; }
+        }
+
+
+        public List<User> Usuarios
+        {
+            get { return usuarios; }
+            set { usuarios = value; }
+        }
+
 
         public Users()
         {
             UserControl DC = new UserControl();
 
-            usuarios = DC.RecuperaLista();
+            usuarios = DC.RecuperaLista(this);
             if (usuarios.Count == 0)
             {
-                List<long> lista =  new List<long>();
+                List<long> lista = new List<long>();
                 lista.Add(0);
                 CadastrarNovoUser("Admin", "Admin", UserControl.UserType.A, lista);
             }
@@ -53,9 +68,10 @@ namespace SistOp.DataStructure.Users
         /// <returns>retorna user ou null caso user nao seja encontrado.</returns>
         private User procuraLogin(string user, string senha)
         {
+            string hash = getMD5Hash(senha);
             foreach (User usr in usuarios)
             {
-                if (usr.Usuario == user && usr.Senha == getMD5Hash(senha))
+                if (usr.Usuario == user && usr.Senha == hash)
                 {
                     return usr;
                 }
@@ -109,7 +125,7 @@ namespace SistOp.DataStructure.Users
             User Aux = procuraLogin(user);
             if (Aux == null)
             {
-                Aux = new User(user, getMD5Hash(senha));
+                Aux = new User(user, getMD5Hash(senha), countID++);
                 usuarios.Add(Aux);
                 UserControl UC = new UserControl();
                 UC.Salva(Aux);
@@ -124,7 +140,7 @@ namespace SistOp.DataStructure.Users
             User Aux = procuraLogin(user);
             if (Aux == null)
             {
-                Aux = new User(user, getMD5Hash(senha), UT, acessos);
+                Aux = new User(user, getMD5Hash(senha), UT, acessos, countID++);
                 usuarios.Add(Aux);
                 UserControl UC = new UserControl();
                 UC.Salva(Aux);
@@ -143,7 +159,11 @@ namespace SistOp.DataStructure.Users
             }
 
         }
+        public void AtualizaUsuario(User Atualizar, string NovaSenha)
+        {
+            AtualizaUsuario(Atualizar.Usuario, NovaSenha, Atualizar.UserType, Atualizar.Acessos);
 
+        }
         public void AtualizaUsuario(string user, string NovaSenha, UserControl.UserType UserType, List<long> Acessos)
         {
 
@@ -151,13 +171,37 @@ namespace SistOp.DataStructure.Users
             User atualizar = procuraLogin(user);
             if (atualizar != null)
             {
-                User Atualizado = new User(user, getMD5Hash(NovaSenha), UserType, Acessos);
+                User Atualizado = new User(user, getMD5Hash(NovaSenha), UserType, Acessos, countID);
+                // atualizar.Senha = getMD5Hash(atualizar.Senha);
                 UC.Atualiza(atualizar, Atualizado);
 
                 usuarios.Remove(atualizar);
                 usuarios.Add(Atualizado);
             }
 
+        }
+        public string permissaoInicial()
+        {
+            string W="", R="", E="";
+            foreach (User u in Usuarios)
+            {
+                W += u.Id + "-";
+            }
+            W = W.Trim('-');
+            R = E = W;
+
+            return R + "," + W + "," + E;
+        }
+        public User Login(string txtUsuario)
+        {
+            foreach (User u in Usuarios)
+            {
+                if (u.Usuario == txtUsuario)
+                {
+                    return u;
+                }
+            }
+            return null;
         }
     }
 

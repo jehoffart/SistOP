@@ -8,24 +8,38 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using SistOp.DataStructure;
+using SistOp.DataStructure.Users;
 namespace SistOp
 {
     public partial class frmPropriedades : Form
     {
         private Arquivo Propriedades;
+        private Arquivo atualizado;
+        private Permissions PM;
+        public Arquivo Atualizado
+        {
+            get { return atualizado; }
+            set { atualizado = value; }
+        }
         private Arvore FileSystem;
-        private int Usr, Grp, Oth;
+
+        private User user;
+        private User SelectedUser;
         public frmPropriedades()
         {
             InitializeComponent();
         }
 
-        public frmPropriedades(Arquivo Propriedades, Arvore FileSystem)
+        public frmPropriedades(Arquivo Propriedades, Arvore FileSystem, User User)
         {
             InitializeComponent();
-            Usr = Grp = Oth = 0;
             this.Propriedades = Propriedades;
+            this.atualizado = new Arquivo(Propriedades);
+            PM = new Permissions(Propriedades.Permissao.ToString());
+            this.atualizado.Permissao = PM;
             this.FileSystem = FileSystem;
+            this.user = User;
+            //AtivaChecksBox(user.isAdmin());
         }
         public void CarregaDados()
         {
@@ -35,122 +49,80 @@ namespace SistOp
             lblAlteracao.Text = Propriedades.UltimaAlteracao.ToString("dd/MM/yyyy - HH:mm");
             lblCriacao.Text = Propriedades.UltimaAlteracao.ToString("dd/MM/yyyy - HH:mm");
 
+
         }
         private void frmPropriedades_Load(object sender, EventArgs e)
         {
             CarregaDados();
-            CarregaPermissao(this.Propriedades);
+            CarregaUsers();
+
         }
-        private void CarregaPermissao(Arquivo Propriedades)
+
+        private void AtivaChecksBox(bool func)
         {
-            int i = 0, j = 0;
-            string Perm = Propriedades.Permissao.ToString();
-            string bin = "";
-            while (j < 3)
-            {
-                i = int.Parse(Perm[j].ToString());
-                while (i >= 2)
-                {
-                    bin = i % 2 + bin;
-                    i /= 2;
-
-                }
-                bin = i + bin;
-                j++;
-            }
-            if (bin[0] == '1') { chkUsrRead.Checked = true; } else { chkUsrRead.Checked = false; }
-            if (bin[1] == '1') { chkUsrWrite.Checked = true; } else { chkUsrWrite.Checked = false; }
-            if (bin[2] == '1') { chkUsrExec.Checked = true; } else { chkUsrExec.Checked = false; }
-
-            if (bin[3] == '1') { chkGroupRead.Checked = true; } else { chkGroupRead.Checked = false; }
-            if (bin[4] == '1') { chkGroupWrite.Checked = true; } else { chkGroupWrite.Checked = false; }
-            if (bin[5] == '1') { chkGroupExec.Checked = true; } else { chkGroupExec.Checked = false; }
-
-            if (bin[3] == '1') { chkOthersRead.Checked = true; } else { chkOthersRead.Checked = false; }
-            if (bin[4] == '1') { chkOthersWrite.Checked = true; } else { chkOthersWrite.Checked = false; }
-            if (bin[5] == '1') { chkOthersExec.Checked = true; } else { chkOthersExec.Checked = false; }
+            chkUsrExec.Enabled = func;
+            chkUsrRead.Enabled = func;
+            chkUsrWrite.Enabled = func;
         }
+
+        private void CarregaUsers()
+        {
+            Users Usr = new Users();
+            foreach (User u in Usr.Usuarios)
+            {
+                lstUsers.Items.Add(u);
+            }
+
+        }
+        private void CarregaPermissao()
+        {
+            chkUsrRead.Checked = Propriedades.Permissao.Permite(SelectedUser.Id, Permissions.TiposAcesso.R);
+            chkUsrWrite.Checked = Propriedades.Permissao.Permite(SelectedUser.Id, Permissions.TiposAcesso.W);
+            chkUsrExec.Checked = Propriedades.Permissao.Permite(SelectedUser.Id, Permissions.TiposAcesso.E);
+        }
+
 
         private void btnFechar_Click(object sender, EventArgs e)
         {
-            
+            if (user.isAdmin())
+                Salva();
             this.Close();
+        }
+
+        private void Salva()
+        {
+            DataControl DC = new DataControl();
+            atualizado.Permissao = PM;
+            DC.Atualiza(Propriedades, atualizado);
+            Propriedades = atualizado;
         }
 
         private void chkUsrRead_CheckedChanged(object sender, EventArgs e)
         {
-            if (chkUsrRead.Checked == true)
-                Usr += 4;
-            else
-                Usr -= 4;
-
+            PM.AlteraPermissions(SelectedUser.Id, Permissions.TiposAcesso.R);
         }
 
         private void chkUsrWrite_CheckedChanged(object sender, EventArgs e)
         {
-            if (chkUsrWrite.Checked == true)
-                Usr += 2;
-            else
-                Usr -= 2;
-
+            PM.AlteraPermissions(SelectedUser.Id, Permissions.TiposAcesso.W);
         }
 
         private void chkUsrExec_CheckedChanged(object sender, EventArgs e)
         {
-            if (chkUsrExec.Checked == true)
-                Usr += 1;
-            else
-                Usr -= 1;
+            PM.AlteraPermissions(SelectedUser.Id, Permissions.TiposAcesso.E);
         }
 
-        private void chkGroupRead_CheckedChanged(object sender, EventArgs e)
+        private void lstUsers_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (chkGroupRead.Checked == true)
-                Grp += 4;
-            else
-                Grp -= 4;
-
+            if (atualizado.Permissao != null && user.isAdmin())
+                Salva();
+            SelectedUser = lstUsers.SelectedItem as User;
+            CarregaPermissao();
+            AtivaChecksBox(user.isAdmin());
         }
 
-        private void chkGroupWrite_CheckedChanged(object sender, EventArgs e)
-        {
-            if (chkGroupWrite.Checked == true)
-                Grp += 2;
-            else
-                Grp -= 2;
-        }
 
-        private void chkGroupExec_CheckedChanged(object sender, EventArgs e)
-        {
-            if (chkGroupExec.Checked == true)
-                Grp += 1;
-            else
-                Grp -= 1;
-        }
 
-        private void chkOthersRead_CheckedChanged(object sender, EventArgs e)
-        {
-            if (chkOthersRead.Checked == true)
-                Oth += 4;
-            else
-                Oth -= 4;
-        }
 
-        private void chkOthersWrite_CheckedChanged(object sender, EventArgs e)
-        {
-            if (chkOthersWrite.Checked == true)
-                Oth += 2;
-            else
-                Oth -= 2;
-        }
-
-        private void chkOthersExec_CheckedChanged(object sender, EventArgs e)
-        {
-            if (chkOthersExec.Checked == true)
-                Oth += 1;
-            else
-                Oth -= 1;
-        }
-        
     }
 }

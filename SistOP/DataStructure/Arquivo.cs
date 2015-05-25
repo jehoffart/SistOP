@@ -154,6 +154,7 @@ namespace SistOp.DataStructure
             this.permissao = Arquivo.permissao;
             this.dataCriacao = Arquivo.DataCriacao;
             this.ultimaAlteracao = Arquivo.ultimaAlteracao;
+            
         }
 
 

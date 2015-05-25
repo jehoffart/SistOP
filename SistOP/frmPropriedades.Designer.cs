@@ -38,22 +38,13 @@
             this.lblAlteracao = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.lstUsers = new System.Windows.Forms.ListBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.chkUsrRead = new System.Windows.Forms.CheckBox();
-            this.chkUsrWrite = new System.Windows.Forms.CheckBox();
             this.chkUsrExec = new System.Windows.Forms.CheckBox();
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.chkGroupExec = new System.Windows.Forms.CheckBox();
-            this.chkGroupWrite = new System.Windows.Forms.CheckBox();
-            this.chkGroupRead = new System.Windows.Forms.CheckBox();
-            this.groupBox4 = new System.Windows.Forms.GroupBox();
-            this.chkOthersExec = new System.Windows.Forms.CheckBox();
-            this.chkOthersWrite = new System.Windows.Forms.CheckBox();
-            this.chkOthersRead = new System.Windows.Forms.CheckBox();
+            this.chkUsrWrite = new System.Windows.Forms.CheckBox();
+            this.chkUsrRead = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
-            this.groupBox3.SuspendLayout();
-            this.groupBox4.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnFechar
@@ -136,8 +127,7 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.groupBox4);
-            this.groupBox1.Controls.Add(this.groupBox3);
+            this.groupBox1.Controls.Add(this.lstUsers);
             this.groupBox1.Controls.Add(this.groupBox2);
             this.groupBox1.Location = new System.Drawing.Point(15, 132);
             this.groupBox1.Name = "groupBox1";
@@ -145,6 +135,15 @@
             this.groupBox1.TabIndex = 2;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Permissões do Arquivo";
+            // 
+            // lstUsers
+            // 
+            this.lstUsers.FormattingEnabled = true;
+            this.lstUsers.Location = new System.Drawing.Point(6, 103);
+            this.lstUsers.Name = "lstUsers";
+            this.lstUsers.Size = new System.Drawing.Size(123, 173);
+            this.lstUsers.TabIndex = 1;
+            this.lstUsers.SelectedIndexChanged += new System.EventHandler(this.lstUsers_SelectedIndexChanged);
             // 
             // groupBox2
             // 
@@ -158,128 +157,41 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Permissões do Usuario";
             // 
-            // chkUsrRead
-            // 
-            this.chkUsrRead.AutoSize = true;
-            this.chkUsrRead.Location = new System.Drawing.Point(6, 29);
-            this.chkUsrRead.Name = "chkUsrRead";
-            this.chkUsrRead.Size = new System.Drawing.Size(58, 17);
-            this.chkUsrRead.TabIndex = 0;
-            this.chkUsrRead.Text = "Leitura";
-            this.chkUsrRead.UseVisualStyleBackColor = true;
-            this.chkUsrRead.CheckedChanged += new System.EventHandler(this.chkUsrRead_CheckedChanged);
-            // 
-            // chkUsrWrite
-            // 
-            this.chkUsrWrite.AutoSize = true;
-            this.chkUsrWrite.Location = new System.Drawing.Point(103, 29);
-            this.chkUsrWrite.Name = "chkUsrWrite";
-            this.chkUsrWrite.Size = new System.Drawing.Size(73, 17);
-            this.chkUsrWrite.TabIndex = 0;
-            this.chkUsrWrite.Text = "Gravação";
-            this.chkUsrWrite.UseVisualStyleBackColor = true;
-            this.chkUsrWrite.CheckedChanged += new System.EventHandler(this.chkUsrWrite_CheckedChanged);
-            // 
             // chkUsrExec
             // 
             this.chkUsrExec.AutoSize = true;
+            this.chkUsrExec.Enabled = false;
             this.chkUsrExec.Location = new System.Drawing.Point(215, 29);
             this.chkUsrExec.Name = "chkUsrExec";
             this.chkUsrExec.Size = new System.Drawing.Size(74, 17);
             this.chkUsrExec.TabIndex = 0;
             this.chkUsrExec.Text = "Execução";
             this.chkUsrExec.UseVisualStyleBackColor = true;
-            this.chkUsrExec.CheckedChanged += new System.EventHandler(this.chkUsrExec_CheckedChanged);
+            this.chkUsrExec.Click += new System.EventHandler(this.chkUsrExec_CheckedChanged);
             // 
-            // groupBox3
+            // chkUsrWrite
             // 
-            this.groupBox3.Controls.Add(this.chkGroupExec);
-            this.groupBox3.Controls.Add(this.chkGroupWrite);
-            this.groupBox3.Controls.Add(this.chkGroupRead);
-            this.groupBox3.Location = new System.Drawing.Point(6, 87);
-            this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(295, 62);
-            this.groupBox3.TabIndex = 0;
-            this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "Permissões do Grupo";
+            this.chkUsrWrite.AutoSize = true;
+            this.chkUsrWrite.Enabled = false;
+            this.chkUsrWrite.Location = new System.Drawing.Point(103, 29);
+            this.chkUsrWrite.Name = "chkUsrWrite";
+            this.chkUsrWrite.Size = new System.Drawing.Size(73, 17);
+            this.chkUsrWrite.TabIndex = 0;
+            this.chkUsrWrite.Text = "Gravação";
+            this.chkUsrWrite.UseVisualStyleBackColor = true;
+            this.chkUsrWrite.Click += new System.EventHandler(this.chkUsrWrite_CheckedChanged);
             // 
-            // chkGroupExec
+            // chkUsrRead
             // 
-            this.chkGroupExec.AutoSize = true;
-            this.chkGroupExec.Location = new System.Drawing.Point(215, 29);
-            this.chkGroupExec.Name = "chkGroupExec";
-            this.chkGroupExec.Size = new System.Drawing.Size(74, 17);
-            this.chkGroupExec.TabIndex = 0;
-            this.chkGroupExec.Text = "Execução";
-            this.chkGroupExec.UseVisualStyleBackColor = true;
-            this.chkGroupExec.CheckedChanged += new System.EventHandler(this.chkGroupExec_CheckedChanged);
-            // 
-            // chkGroupWrite
-            // 
-            this.chkGroupWrite.AutoSize = true;
-            this.chkGroupWrite.Location = new System.Drawing.Point(103, 29);
-            this.chkGroupWrite.Name = "chkGroupWrite";
-            this.chkGroupWrite.Size = new System.Drawing.Size(73, 17);
-            this.chkGroupWrite.TabIndex = 0;
-            this.chkGroupWrite.Text = "Gravação";
-            this.chkGroupWrite.UseVisualStyleBackColor = true;
-            this.chkGroupWrite.CheckedChanged += new System.EventHandler(this.chkGroupWrite_CheckedChanged);
-            // 
-            // chkGroupRead
-            // 
-            this.chkGroupRead.AutoSize = true;
-            this.chkGroupRead.Location = new System.Drawing.Point(6, 29);
-            this.chkGroupRead.Name = "chkGroupRead";
-            this.chkGroupRead.Size = new System.Drawing.Size(58, 17);
-            this.chkGroupRead.TabIndex = 0;
-            this.chkGroupRead.Text = "Leitura";
-            this.chkGroupRead.UseVisualStyleBackColor = true;
-            this.chkGroupRead.CheckedChanged += new System.EventHandler(this.chkGroupRead_CheckedChanged);
-            // 
-            // groupBox4
-            // 
-            this.groupBox4.Controls.Add(this.chkOthersExec);
-            this.groupBox4.Controls.Add(this.chkOthersWrite);
-            this.groupBox4.Controls.Add(this.chkOthersRead);
-            this.groupBox4.Location = new System.Drawing.Point(6, 155);
-            this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(295, 62);
-            this.groupBox4.TabIndex = 0;
-            this.groupBox4.TabStop = false;
-            this.groupBox4.Text = "Permissões  de Outros";
-            // 
-            // chkOthersExec
-            // 
-            this.chkOthersExec.AutoSize = true;
-            this.chkOthersExec.Location = new System.Drawing.Point(215, 29);
-            this.chkOthersExec.Name = "chkOthersExec";
-            this.chkOthersExec.Size = new System.Drawing.Size(74, 17);
-            this.chkOthersExec.TabIndex = 0;
-            this.chkOthersExec.Text = "Execução";
-            this.chkOthersExec.UseVisualStyleBackColor = true;
-            this.chkOthersExec.CheckedChanged += new System.EventHandler(this.chkOthersExec_CheckedChanged);
-            // 
-            // chkOthersWrite
-            // 
-            this.chkOthersWrite.AutoSize = true;
-            this.chkOthersWrite.Location = new System.Drawing.Point(103, 29);
-            this.chkOthersWrite.Name = "chkOthersWrite";
-            this.chkOthersWrite.Size = new System.Drawing.Size(73, 17);
-            this.chkOthersWrite.TabIndex = 0;
-            this.chkOthersWrite.Text = "Gravação";
-            this.chkOthersWrite.UseVisualStyleBackColor = true;
-            this.chkOthersWrite.CheckedChanged += new System.EventHandler(this.chkOthersWrite_CheckedChanged);
-            // 
-            // chkOthersRead
-            // 
-            this.chkOthersRead.AutoSize = true;
-            this.chkOthersRead.Location = new System.Drawing.Point(6, 29);
-            this.chkOthersRead.Name = "chkOthersRead";
-            this.chkOthersRead.Size = new System.Drawing.Size(58, 17);
-            this.chkOthersRead.TabIndex = 0;
-            this.chkOthersRead.Text = "Leitura";
-            this.chkOthersRead.UseVisualStyleBackColor = true;
-            this.chkOthersRead.CheckedChanged += new System.EventHandler(this.chkOthersRead_CheckedChanged);
+            this.chkUsrRead.AutoSize = true;
+            this.chkUsrRead.Enabled = false;
+            this.chkUsrRead.Location = new System.Drawing.Point(6, 29);
+            this.chkUsrRead.Name = "chkUsrRead";
+            this.chkUsrRead.Size = new System.Drawing.Size(58, 17);
+            this.chkUsrRead.TabIndex = 0;
+            this.chkUsrRead.Text = "Leitura";
+            this.chkUsrRead.UseVisualStyleBackColor = true;
+            this.chkUsrRead.Click += new System.EventHandler(this.chkUsrRead_CheckedChanged);
             // 
             // frmPropriedades
             // 
@@ -303,10 +215,6 @@
             this.groupBox1.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
-            this.groupBox3.ResumeLayout(false);
-            this.groupBox3.PerformLayout();
-            this.groupBox4.ResumeLayout(false);
-            this.groupBox4.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -328,13 +236,6 @@
         private System.Windows.Forms.CheckBox chkUsrExec;
         private System.Windows.Forms.CheckBox chkUsrWrite;
         private System.Windows.Forms.CheckBox chkUsrRead;
-        private System.Windows.Forms.GroupBox groupBox4;
-        private System.Windows.Forms.CheckBox chkOthersExec;
-        private System.Windows.Forms.CheckBox chkOthersWrite;
-        private System.Windows.Forms.CheckBox chkOthersRead;
-        private System.Windows.Forms.GroupBox groupBox3;
-        private System.Windows.Forms.CheckBox chkGroupExec;
-        private System.Windows.Forms.CheckBox chkGroupWrite;
-        private System.Windows.Forms.CheckBox chkGroupRead;
+        private System.Windows.Forms.ListBox lstUsers;
     }
 }

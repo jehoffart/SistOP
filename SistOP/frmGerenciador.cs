@@ -9,6 +9,7 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using SistOp.DataStructure;
+using SistOp.DataStructure.Users;
 
 namespace SistOp
 {
@@ -20,15 +21,15 @@ namespace SistOp
         Point localProximoArquivo;
         PictureBox Clicado;
         ImageList IL = new ImageList();
+        User isLoged;
 
-        bool emPesquisa=false;
+        bool emPesquisa = false;
 
 
         public frmGerenciador()
         {
             InitializeComponent();
             FileSystem.recuperaArvore();
-            dirAberto = FileSystem.Raiz;
             IL.Images.Add(Image.FromFile(Directory.GetCurrentDirectory() + @"\Resources\file.png"));
             IL.Images.Add(Image.FromFile(Directory.GetCurrentDirectory() + @"\Resources\folder.png"));
             twvListaPastas.ImageList = IL;
@@ -43,6 +44,18 @@ namespace SistOp
         {
             frmLoginControl frm = new frmLoginControl();
             frm.ShowDialog();
+
+            this.isLoged = frm.IsLoged;
+            if (this.isLoged == null)
+                this.Close();
+            lnklblUser.Text = "Usuário:" + isLoged.ToString();
+            DataControl DC = new DataControl();
+
+            Arquivo RaizAtualizada = new Arquivo(FileSystem.Raiz);
+            RaizAtualizada.Permissao = null;
+            RaizAtualizada.Permissao = new Permissions(frm.PermissaoPadrao);
+            DC.Atualiza(FileSystem.Raiz, RaizAtualizada);
+            dirAberto = FileSystem.Raiz;
             LimpaLayout(dirAberto, true);
             CriaTree(FileSystem.Raiz);
         }
@@ -194,6 +207,11 @@ namespace SistOp
         {
             (sender as PictureBox).BorderStyle = BorderStyle.FixedSingle;
         }
+        public bool liberaAcesso(Permissions.TiposAcesso TA, Arquivo a)
+        {
+
+            return a.Permissao.Permite(isLoged.Id, TA);
+        }
         public void Abre(object sender, MouseEventArgs e)
         {
 
@@ -210,18 +228,37 @@ namespace SistOp
                 {
                     if (pb.ImageLocation == Directory.GetCurrentDirectory() + @"\Resources\folder.png")
                     {
-                                           string nome = pb.Name;
-                        dirAberto = FileSystem.ProcuraFilho(nome, dirAberto);
-                        LimpaLayout(dirAberto, true);
-                        tsslabel.Text = FileSystem.CaminhoAteRaiz(dirAberto);
+                        Arquivo aux;
+                        string nome = pb.Name;
+                        aux = FileSystem.ProcuraFilho(nome, dirAberto);
+
+                        if (liberaAcesso(Permissions.TiposAcesso.R, aux))
+                        {
+                            dirAberto = aux;
+                            LimpaLayout(dirAberto, true);
+                            tsslabel.Text = FileSystem.CaminhoAteRaiz(dirAberto);
+                        }
+                        else
+                        {
+                            MessageBox.Show("Acesso não autorizado");
+                        }
+
                     }
 
                     else if (pb.ImageLocation == Directory.GetCurrentDirectory() + @"\Resources\file.png")
                     {
-                        twvListaPastas.Visible = false;
-                        LimpaLayout(dirAberto, false);
-                        FileAberto = FileSystem.ProcuraFilho(pb.Name, dirAberto);
-                        GeraLayoutEdicao(FileAberto);
+                        Arquivo aux = FileSystem.ProcuraFilho(pb.Name, dirAberto);
+                        if (liberaAcesso(Permissions.TiposAcesso.R, aux))
+                        {
+                            twvListaPastas.Visible = false;
+                            LimpaLayout(dirAberto, false);
+                            FileAberto = aux;
+                            GeraLayoutEdicao(FileAberto);
+                        }
+                        else
+                        {
+                            MessageBox.Show("Acesso nao autorizado");
+                        }
                     }
                 }
             }
@@ -235,11 +272,11 @@ namespace SistOp
                 else if (e.Button == MouseButtons.Left)
                 {
                     string nome = (sender as PictureBox).Name;
-                    long PesquisaID = long.Parse(nome.Trim(new char[] {'p'}));
+                    long PesquisaID = long.Parse(nome.Trim(new char[] { 'p' }));
                     bool isDir = false;
                     if (pb.ImageLocation == Directory.GetCurrentDirectory() + @"\Resources\folder.png")
                     {
-                        
+
 
                         dirAberto = FileSystem.ProcuraID(PesquisaID);
                         isDir = true;
@@ -248,8 +285,9 @@ namespace SistOp
 
                     else if (pb.ImageLocation == Directory.GetCurrentDirectory() + @"\Resources\file.png")
                     {
+
                         twvListaPastas.Visible = false;
-                        
+
                         FileAberto = FileSystem.ProcuraID(PesquisaID);
                         GeraLayoutEdicao(FileAberto);
 
@@ -345,14 +383,20 @@ namespace SistOp
 
         void btnSalvar_Click(object sender, EventArgs e)
         {
-            DataControl DC = new DataControl();
-            BinaryChange BC = new BinaryChange();
-            string Hex = BC.toByte(texto);
-            Arquivo aux = new Arquivo(FileAberto);
-            FileAberto.Conteudo = Hex;
-            FileAberto.UltimaAlteracao = DateTime.Now;
-            DC.Atualiza(aux, FileAberto);
-
+            if (FileAberto.Permissao.Permite(isLoged.Id, Permissions.TiposAcesso.W))
+            {
+                DataControl DC = new DataControl();
+                BinaryChange BC = new BinaryChange();
+                string Hex = BC.toByte(texto);
+                Arquivo aux = new Arquivo(FileAberto);
+                FileAberto.Conteudo = Hex;
+                FileAberto.UltimaAlteracao = DateTime.Now;
+                DC.Atualiza(aux, FileAberto);
+            }
+            else
+            {
+                MessageBox.Show("Não é permitido salvar.");
+            }
 
         }
         private void Form1_ResizeEnd(object sender, EventArgs e)
@@ -367,6 +411,13 @@ namespace SistOp
 
         private void btnVoltar_Click(object sender, EventArgs e)
         {
+            if (emPesquisa == true)
+            {
+                emPesquisa = false;
+                dirAberto = FileSystem.Raiz;
+                tsslabel.Text = FileSystem.CaminhoAteRaiz(dirAberto);
+                LimpaLayout(dirAberto, true);
+            }
             if (dirAberto.Pai != null)
             {
                 dirAberto = dirAberto.Pai;
@@ -388,30 +439,38 @@ namespace SistOp
         }
         private void btnNovaPasta_Click(object sender, EventArgs e)
         {
-            AtivaDesativaControls(false);
-            this.SuspendLayout();
+            if (dirAberto.Permissao.Permite(isLoged.Id, Permissions.TiposAcesso.W))
+            {
 
-            var img1 = new System.Windows.Forms.PictureBox();
-            img1.Location = new System.Drawing.Point(localProximoArquivo.X, localProximoArquivo.Y);
-            img1.Size = new System.Drawing.Size(82, 77);
+                AtivaDesativaControls(false);
+                this.SuspendLayout();
 
-            img1.Image = Image.FromFile(Directory.GetCurrentDirectory() + @"\Resources\folder.png");
-            img1.SizeMode = PictureBoxSizeMode.StretchImage;
-            img1.BorderStyle = BorderStyle.None;
+                var img1 = new System.Windows.Forms.PictureBox();
+                img1.Location = new System.Drawing.Point(localProximoArquivo.X, localProximoArquivo.Y);
+                img1.Size = new System.Drawing.Size(82, 77);
 
-            this.Controls.Add(img1);
+                img1.Image = Image.FromFile(Directory.GetCurrentDirectory() + @"\Resources\folder.png");
+                img1.SizeMode = PictureBoxSizeMode.StretchImage;
+                img1.BorderStyle = BorderStyle.None;
 
-            var txt = new System.Windows.Forms.TextBox();
-            txt.Name = "txtNovaPasta";
-            txt.KeyUp += txt_KeyUp;
-            txt.KeyPress += txt_KeyPress;
-            txt.Text = "Nova Pasta";
+                this.Controls.Add(img1);
 
-            txt.Location = new System.Drawing.Point((img1.Location.X), img1.Location.Y + img1.Size.Height + 10);
-            txt.Size = new System.Drawing.Size(img1.Size.Width, txt.Size.Height);
-            this.Controls.Add(txt);
-            txt.Focus();
-            this.ResumeLayout(false);
+                var txt = new System.Windows.Forms.TextBox();
+                txt.Name = "txtNovaPasta";
+                txt.KeyUp += txt_KeyUp;
+                txt.KeyPress += txt_KeyPress;
+                txt.Text = "Nova Pasta";
+
+                txt.Location = new System.Drawing.Point((img1.Location.X), img1.Location.Y + img1.Size.Height + 10);
+                txt.Size = new System.Drawing.Size(img1.Size.Width, txt.Size.Height);
+                this.Controls.Add(txt);
+                txt.Focus();
+                this.ResumeLayout(false);
+            }
+            else
+            {
+                MessageBox.Show("Não é permitido criar arquivos ou pastas neste diretório");
+            }
         }
 
         void txt_KeyPress(object sender, KeyPressEventArgs e)
@@ -473,11 +532,16 @@ namespace SistOp
 
         private void excluirToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Arquivo remove = FileSystem.ProcuraFilho(Clicado.Name, dirAberto);
-            DataControl DC = new DataControl();
-            DC.remove(remove);
-            LimpaLayout(dirAberto, true);
-            CriaTree(FileSystem.Raiz);
+            Arquivo remove, aux = FileSystem.ProcuraFilho(Clicado.Name, dirAberto);
+            if (aux.Permissao.Permite(isLoged.Id, Permissions.TiposAcesso.W))
+            {
+                remove = aux;
+                DataControl DC = new DataControl();
+                DC.remove(remove);
+                LimpaLayout(dirAberto, true);
+                CriaTree(FileSystem.Raiz);
+            }
+
         }
 
         private void Form1_KeyUp(object sender, KeyEventArgs e)
@@ -494,37 +558,47 @@ namespace SistOp
         }
         private void btnNewFile_Click(object sender, EventArgs e)
         {
-            btnNovaPasta.Enabled = false;
-            this.SuspendLayout();
+            if (dirAberto.Permissao.Permite(isLoged.Id, Permissions.TiposAcesso.W))
+            {
+                AtivaDesativaControls(false);
+                this.SuspendLayout();
 
-            var img1 = new System.Windows.Forms.PictureBox();
-            img1.Location = new System.Drawing.Point(localProximoArquivo.X, localProximoArquivo.Y);
-            img1.Size = new System.Drawing.Size(82, 77);
+                var img1 = new System.Windows.Forms.PictureBox();
+                img1.Location = new System.Drawing.Point(localProximoArquivo.X, localProximoArquivo.Y);
+                img1.Size = new System.Drawing.Size(82, 77);
 
-            img1.Image = Image.FromFile(Directory.GetCurrentDirectory() + @"\Resources\file.png");
-            img1.SizeMode = PictureBoxSizeMode.StretchImage;
-            img1.BorderStyle = BorderStyle.None;
+                img1.Image = Image.FromFile(Directory.GetCurrentDirectory() + @"\Resources\file.png");
+                img1.SizeMode = PictureBoxSizeMode.StretchImage;
+                img1.BorderStyle = BorderStyle.None;
 
-            this.Controls.Add(img1);
+                this.Controls.Add(img1);
 
-            var txt = new System.Windows.Forms.TextBox();
-            txt.Name = "txtNovoArquivo";
-            txt.KeyUp += txt_KeyUp;
-            txt.MaxLength = 900000;
-            txt.KeyPress += txt_KeyPress;
-            txt.Location = new System.Drawing.Point((img1.Location.X), img1.Location.Y + img1.Size.Height + 10);
-            txt.Size = new System.Drawing.Size(img1.Size.Width, txt.Size.Height);
-            this.Controls.Add(txt);
-            txt.Focus();
-            this.ResumeLayout(false);
+                var txt = new System.Windows.Forms.TextBox();
+                txt.Name = "txtNovoArquivo";
+                txt.Text = "Novo Arquivo";
+                txt.KeyUp += txt_KeyUp;
+                txt.MaxLength = 900000;
+                txt.KeyPress += txt_KeyPress;
+                txt.Location = new System.Drawing.Point((img1.Location.X), img1.Location.Y + img1.Size.Height + 10);
+                txt.Size = new System.Drawing.Size(img1.Size.Width, txt.Size.Height);
+                this.Controls.Add(txt);
+                txt.Focus();
+                this.ResumeLayout(false);
+            }
+            else
+            {
+                MessageBox.Show("Não é permitido criar arquivos ou pastas neste diretório");
+            }
         }
 
         private void propriedadesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             PictureBox pb = Clicado;
             Arquivo Propriedades = FileSystem.ProcuraFilho(pb.Name, dirAberto);
-            frmPropriedades frm = new frmPropriedades(Propriedades, FileSystem);
+            frmPropriedades frm = new frmPropriedades(Propriedades, FileSystem, isLoged);
+
             frm.ShowDialog();
+            Propriedades.Permissao = frm.Atualizado.Permissao;
         }
 
         private void frmGerenciador_FormClosed(object sender, FormClosedEventArgs e)
@@ -555,14 +629,30 @@ namespace SistOp
         {
             foreach (Arquivo a in dirAberto.Filhos)
             {
-                if (a.Nome.Contains(p))
+                if (a.Permissao.Permite(isLoged.Id, Permissions.TiposAcesso.R))
                 {
-                    aux.Filhos.Add(a);
-                }
+                    if (a.Nome.Contains(p))
+                    {
+                        aux.Filhos.Add(a);
+                    }
 
-                pesquisar(a, p, aux);
+                    pesquisar(a, p, aux);
+                }
             }
 
+        }
+
+        private void lnklblUser_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            frmLoginControl frm = new frmLoginControl();
+            frm.ShowDialog();
+
+            if (frm.IsLoged != null)
+            {
+                isLoged = frm.IsLoged;
+            }
+
+            lnklblUser.Text = "Usuário:" + isLoged.ToString();
         }
 
 

@@ -12,7 +12,13 @@ namespace SistOp
 {
     public partial class frmLoginControl : Form
     {
-        User isLogin;
+        private User isLoged;
+        public string PermissaoPadrao;
+        public User IsLoged
+        {
+            get { return isLoged; }
+            set { isLoged = value; }
+        }
         public frmLoginControl()
         {
             InitializeComponent();
@@ -23,9 +29,9 @@ namespace SistOp
             Users Usr = new Users();
             if (Usr.Login(txtUsuario.Text, txtSenha.Text))
             {
-                MessageBox.Show("Login Ok");
-                
-                this.Hide();
+                IsLoged = Usr.Login(txtUsuario.Text);
+                PermissaoPadrao = Usr.permissaoInicial();
+                this.Close();
             }
             else
             {
@@ -36,11 +42,17 @@ namespace SistOp
         private void btnSair_Click(object sender, EventArgs e)
         {
             this.Close();
+            
         }
 
         private void lnkNovoUsuario_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            new frmGerenciaUsuarios().Show();
+            new frmGerenciaUsuarios().ShowDialog();
+        }
+
+        private void frmLoginControl_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

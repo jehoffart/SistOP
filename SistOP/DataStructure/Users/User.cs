@@ -6,12 +6,20 @@ using System.Threading.Tasks;
 
 namespace SistOp.DataStructure.Users
 {
-    class User
+   public class User
     {
         private string usuario;
         private string senha;
         private List<long> acessos;
         private UserControl.UserType uT;
+        private long id;
+
+        public long Id
+        {
+            get { return id; }
+            set { id = value; }
+        }
+
 
         public UserControl.UserType UserType
         {
@@ -42,7 +50,7 @@ namespace SistOp.DataStructure.Users
             set { senha = value; }
         }
 
-        public User(string usuario, string senha)
+        public User(string usuario, string senha, long ID)
         {
 
             this.usuario = usuario;
@@ -50,14 +58,28 @@ namespace SistOp.DataStructure.Users
             this.Acessos = new List<long>();
             this.Acessos.Add(0);
             this.uT = UserControl.UserType.U;
+            this.id = ID;
         }
-        public User(string Usuario, string senha, UserControl.UserType Type, List<long> Acessos)
+        public User(string Usuario, string senha, UserControl.UserType Type, List<long> Acessos, long ID)
         {
             this.usuario = Usuario;
             this.senha = senha;
             this.uT = Type;
             this.acessos = Acessos;
+            this.id = ID;
+        }
+        public bool isAdmin()
+        {
+            if (this.uT == UserControl.UserType.A)
+            {
+                return true;
+            }
+            return false;
+        }
 
+        public override string ToString()
+        {
+            return Usuario;
         }
     }
 }

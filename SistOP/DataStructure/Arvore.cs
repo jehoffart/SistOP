@@ -34,7 +34,7 @@ namespace SistOp.DataStructure
         public Arquivo CriaRaiz()
         {
             DataControl DC = new DataControl();
-            Arquivo aux = new Arquivo("Raiz", null, DataControl.IsDirectory.D, countID++, -1, "",new Permissions("777"),DateTime.Now,DateTime.Now);
+            Arquivo aux = new Arquivo("Raiz", null, DataControl.IsDirectory.D, countID++, -1, "",new Permissions(",,"),DateTime.Now,DateTime.Now);
             DC.Salva(aux);
             return aux;
         }
@@ -100,12 +100,12 @@ namespace SistOp.DataStructure
             //
             if (type == DataControl.IsDirectory.A)
             {
-                aux = new Arquivo(Nome, Pai, DataControl.IsDirectory.A,countID++, Pai.DirID, "", new Permissions("777"), DateTime.Now, DateTime.Now);
+                aux = new Arquivo(Nome, Pai, DataControl.IsDirectory.A,countID++, Pai.DirID, "", new Permissions(), DateTime.Now, DateTime.Now);
                 Pai.Filhos.Add(aux);
             }
             else if (type == DataControl.IsDirectory.D)
             {
-                aux = new Arquivo(Nome, Pai, DataControl.IsDirectory.D, countID++, Pai.DirID, "", new Permissions("777"), DateTime.Now, DateTime.Now);
+                aux = new Arquivo(Nome, Pai, DataControl.IsDirectory.D, countID++, Pai.DirID, "", new Permissions(), DateTime.Now, DateTime.Now);
                 Pai.Filhos.Add(aux);
             }
 
@@ -215,7 +215,7 @@ namespace SistOp.DataStructure
 
                     }
                 }
-                if(countID> 1)countID++;
+                countID++;
             }
         }
 

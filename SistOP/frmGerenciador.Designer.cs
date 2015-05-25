@@ -42,6 +42,7 @@
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.twvListaPastas = new System.Windows.Forms.TreeView();
             this.btnNewFile = new System.Windows.Forms.Button();
+            this.lnklblUser = new System.Windows.Forms.LinkLabel();
             this.sstrip.SuspendLayout();
             this.contxtMenuStrip.SuspendLayout();
             this.SuspendLayout();
@@ -148,11 +149,21 @@
             this.btnNewFile.UseVisualStyleBackColor = true;
             this.btnNewFile.Click += new System.EventHandler(this.btnNewFile_Click);
             // 
+            // lnklblUser
+            // 
+            this.lnklblUser.AutoSize = true;
+            this.lnklblUser.Location = new System.Drawing.Point(1083, 15);
+            this.lnklblUser.Name = "lnklblUser";
+            this.lnklblUser.Size = new System.Drawing.Size(0, 13);
+            this.lnklblUser.TabIndex = 6;
+            this.lnklblUser.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lnklblUser_LinkClicked);
+            // 
             // frmGerenciador
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1189, 508);
+            this.Controls.Add(this.lnklblUser);
             this.Controls.Add(this.btnNewFile);
             this.Controls.Add(this.twvListaPastas);
             this.Controls.Add(this.sstrip);
@@ -193,6 +204,7 @@
         private System.Windows.Forms.Button btnNewFile;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem propriedadesToolStripMenuItem;
+        private System.Windows.Forms.LinkLabel lnklblUser;
     }
 }
 
