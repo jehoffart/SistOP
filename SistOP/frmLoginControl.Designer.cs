@@ -49,6 +49,7 @@
             // 
             // btnSair
             // 
+            this.btnSair.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.btnSair.Location = new System.Drawing.Point(236, 93);
             this.btnSair.Name = "btnSair";
             this.btnSair.Size = new System.Drawing.Size(113, 35);
@@ -103,8 +104,10 @@
             // 
             // frmLoginControl
             // 
+            this.AcceptButton = this.btnEntrar;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.CancelButton = this.btnSair;
             this.ClientSize = new System.Drawing.Size(363, 140);
             this.Controls.Add(this.lnkNovoUsuario);
             this.Controls.Add(this.txtSenha);

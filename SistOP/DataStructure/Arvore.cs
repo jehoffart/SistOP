@@ -100,7 +100,7 @@ namespace SistOp.DataStructure
             //
             if (type == DataControl.IsDirectory.A)
             {
-                aux = new Arquivo(Nome, Pai, DataControl.IsDirectory.A, -1, Pai.DirID, "", new Permissions("777"), DateTime.Now, DateTime.Now);
+                aux = new Arquivo(Nome, Pai, DataControl.IsDirectory.A,countID++, Pai.DirID, "", new Permissions("777"), DateTime.Now, DateTime.Now);
                 Pai.Filhos.Add(aux);
             }
             else if (type == DataControl.IsDirectory.D)
@@ -116,7 +116,18 @@ namespace SistOp.DataStructure
             }
             return true;
         }
-
+        /// <summary>
+        /// Inserção para recuperar a arvore de arquivos.
+        /// </summary>
+        /// <param name="Nome"></param>
+        /// <param name="type"></param>
+        /// <param name="DirID"></param>
+        /// <param name="PaiID"></param>
+        /// <param name="conteudo"></param>
+        /// <param name="permissions"></param>
+        /// <param name="Criacao"></param>
+        /// <param name="Alteracao"></param>
+        /// <returns></returns>
         public Arquivo Inserir(string Nome, DataControl.IsDirectory type, long DirID, long PaiID, string conteudo, Permissions permissions, DateTime Criacao, DateTime Alteracao)
         {
             Arquivo aux = null;
@@ -126,7 +137,7 @@ namespace SistOp.DataStructure
             //
             if (type == DataControl.IsDirectory.A)
             {
-                aux = new Arquivo(Nome, null, type, -1, PaiID, conteudo, permissions, Criacao, Alteracao);
+                aux = new Arquivo(Nome, null, type, DirID, PaiID, conteudo, permissions, Criacao, Alteracao);
                 FileList.Add(aux);
             }
             else if (type == DataControl.IsDirectory.D)
@@ -135,16 +146,17 @@ namespace SistOp.DataStructure
                 FileList.Add(aux);
 
             }
-            countID++;
+            if (countID < DirID)
+                countID = (int)DirID;
             return aux;
         }
+        //public Arvore PesquisaArquivos(Arquivo dirAtual)
+        //{
+        //    Arvore aux = new Arvore();
 
-        public void Deletar(Arquivo file)
-        {
-            //Remove a referencia para o arquivo filho
-            file.Pai.Filhos.Remove(file);
-            file = null;
-        }
+
+
+   
         /// <summary>
         /// Certifica se arquivo existe no diretorio espec
         /// 
@@ -203,7 +215,7 @@ namespace SistOp.DataStructure
 
                     }
                 }
-
+                if(countID> 1)countID++;
             }
         }
 

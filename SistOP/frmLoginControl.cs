@@ -12,6 +12,7 @@ namespace SistOp
 {
     public partial class frmLoginControl : Form
     {
+        User isLogin;
         public frmLoginControl()
         {
             InitializeComponent();
@@ -23,7 +24,7 @@ namespace SistOp
             if (Usr.Login(txtUsuario.Text, txtSenha.Text))
             {
                 MessageBox.Show("Login Ok");
-                new frmGerenciador().Show();
+                
                 this.Hide();
             }
             else

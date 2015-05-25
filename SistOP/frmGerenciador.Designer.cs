@@ -31,26 +31,26 @@
             this.components = new System.ComponentModel.Container();
             this.btnNovaPasta = new System.Windows.Forms.Button();
             this.btnVoltar = new System.Windows.Forms.Button();
-            this.txtCaminho = new System.Windows.Forms.TextBox();
-            this.button3 = new System.Windows.Forms.Button();
+            this.txtPesquisa = new System.Windows.Forms.TextBox();
+            this.btnPesquisa = new System.Windows.Forms.Button();
             this.sstrip = new System.Windows.Forms.StatusStrip();
             this.tsslabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.contxtMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.excluirToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
+            this.propriedadesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.twvListaPastas = new System.Windows.Forms.TreeView();
             this.btnNewFile = new System.Windows.Forms.Button();
-            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
-            this.propriedadesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.sstrip.SuspendLayout();
             this.contxtMenuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnNovaPasta
             // 
-            this.btnNovaPasta.Location = new System.Drawing.Point(693, 12);
+            this.btnNovaPasta.Location = new System.Drawing.Point(749, 10);
             this.btnNovaPasta.Name = "btnNovaPasta";
-            this.btnNovaPasta.Size = new System.Drawing.Size(75, 23);
+            this.btnNovaPasta.Size = new System.Drawing.Size(87, 23);
             this.btnNovaPasta.TabIndex = 0;
             this.btnNovaPasta.Text = "Nova Pasta";
             this.btnNovaPasta.UseVisualStyleBackColor = true;
@@ -58,30 +58,31 @@
             // 
             // btnVoltar
             // 
-            this.btnVoltar.Location = new System.Drawing.Point(867, 12);
+            this.btnVoltar.Location = new System.Drawing.Point(935, 10);
             this.btnVoltar.Name = "btnVoltar";
-            this.btnVoltar.Size = new System.Drawing.Size(75, 23);
+            this.btnVoltar.Size = new System.Drawing.Size(87, 23);
             this.btnVoltar.TabIndex = 0;
             this.btnVoltar.Text = "Voltar";
             this.btnVoltar.UseVisualStyleBackColor = true;
             this.btnVoltar.Click += new System.EventHandler(this.btnVoltar_Click);
             // 
-            // txtCaminho
+            // txtPesquisa
             // 
-            this.txtCaminho.Location = new System.Drawing.Point(12, 12);
-            this.txtCaminho.MaxLength = 32171;
-            this.txtCaminho.Name = "txtCaminho";
-            this.txtCaminho.Size = new System.Drawing.Size(638, 20);
-            this.txtCaminho.TabIndex = 1;
+            this.txtPesquisa.Location = new System.Drawing.Point(12, 12);
+            this.txtPesquisa.MaxLength = 32171;
+            this.txtPesquisa.Name = "txtPesquisa";
+            this.txtPesquisa.Size = new System.Drawing.Size(638, 20);
+            this.txtPesquisa.TabIndex = 1;
             // 
-            // button3
+            // btnPesquisa
             // 
-            this.button3.Location = new System.Drawing.Point(656, 10);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(31, 25);
-            this.button3.TabIndex = 2;
-            this.button3.Text = "button3";
-            this.button3.UseVisualStyleBackColor = true;
+            this.btnPesquisa.Location = new System.Drawing.Point(656, 10);
+            this.btnPesquisa.Name = "btnPesquisa";
+            this.btnPesquisa.Size = new System.Drawing.Size(87, 23);
+            this.btnPesquisa.TabIndex = 2;
+            this.btnPesquisa.Text = "Pesquisar";
+            this.btnPesquisa.UseVisualStyleBackColor = true;
+            this.btnPesquisa.Click += new System.EventHandler(this.btnPesquisa_Click);
             // 
             // sstrip
             // 
@@ -111,9 +112,21 @@
             // excluirToolStripMenuItem
             // 
             this.excluirToolStripMenuItem.Name = "excluirToolStripMenuItem";
-            this.excluirToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.excluirToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
             this.excluirToolStripMenuItem.Text = "Excluir";
             this.excluirToolStripMenuItem.Click += new System.EventHandler(this.excluirToolStripMenuItem_Click);
+            // 
+            // toolStripMenuItem1
+            // 
+            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(140, 6);
+            // 
+            // propriedadesToolStripMenuItem
+            // 
+            this.propriedadesToolStripMenuItem.Name = "propriedadesToolStripMenuItem";
+            this.propriedadesToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
+            this.propriedadesToolStripMenuItem.Text = "Propriedades";
+            this.propriedadesToolStripMenuItem.Click += new System.EventHandler(this.propriedadesToolStripMenuItem_Click);
             // 
             // twvListaPastas
             // 
@@ -127,25 +140,13 @@
             // 
             // btnNewFile
             // 
-            this.btnNewFile.Location = new System.Drawing.Point(774, 12);
+            this.btnNewFile.Location = new System.Drawing.Point(842, 10);
             this.btnNewFile.Name = "btnNewFile";
             this.btnNewFile.Size = new System.Drawing.Size(87, 23);
             this.btnNewFile.TabIndex = 5;
             this.btnNewFile.Text = "Novo Arquivo";
             this.btnNewFile.UseVisualStyleBackColor = true;
             this.btnNewFile.Click += new System.EventHandler(this.btnNewFile_Click);
-            // 
-            // toolStripMenuItem1
-            // 
-            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(149, 6);
-            // 
-            // propriedadesToolStripMenuItem
-            // 
-            this.propriedadesToolStripMenuItem.Name = "propriedadesToolStripMenuItem";
-            this.propriedadesToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.propriedadesToolStripMenuItem.Text = "Propriedades";
-            this.propriedadesToolStripMenuItem.Click += new System.EventHandler(this.propriedadesToolStripMenuItem_Click);
             // 
             // frmGerenciador
             // 
@@ -155,8 +156,8 @@
             this.Controls.Add(this.btnNewFile);
             this.Controls.Add(this.twvListaPastas);
             this.Controls.Add(this.sstrip);
-            this.Controls.Add(this.button3);
-            this.Controls.Add(this.txtCaminho);
+            this.Controls.Add(this.btnPesquisa);
+            this.Controls.Add(this.txtPesquisa);
             this.Controls.Add(this.btnVoltar);
             this.Controls.Add(this.btnNovaPasta);
             this.Name = "frmGerenciador";
@@ -181,8 +182,8 @@
 
         private System.Windows.Forms.Button btnNovaPasta;
         private System.Windows.Forms.Button btnVoltar;
-        private System.Windows.Forms.TextBox txtCaminho;
-        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.TextBox txtPesquisa;
+        private System.Windows.Forms.Button btnPesquisa;
         private System.Windows.Forms.StatusStrip sstrip;
         private System.Windows.Forms.ToolStripStatusLabel tsslabel;
         private System.Windows.Forms.ContextMenuStrip contxtMenuStrip;

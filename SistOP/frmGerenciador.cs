@@ -15,12 +15,15 @@ namespace SistOp
     public partial class frmGerenciador : Form
     {
         string texto = "";
-        private Arquivo dirAberto, FileAberto;
+        private Arquivo dirAberto, FileAberto, ArquivoPesquisa;
         Arvore FileSystem = new Arvore();
         Point localProximoArquivo;
         PictureBox Clicado;
         ImageList IL = new ImageList();
-        int Id = 0;
+
+        bool emPesquisa=false;
+
+
         public frmGerenciador()
         {
             InitializeComponent();
@@ -38,6 +41,8 @@ namespace SistOp
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            frmLoginControl frm = new frmLoginControl();
+            frm.ShowDialog();
             LimpaLayout(dirAberto, true);
             CriaTree(FileSystem.Raiz);
         }
@@ -126,7 +131,14 @@ namespace SistOp
                     }
                     img1.SizeMode = PictureBoxSizeMode.StretchImage;
                     img1.BorderStyle = BorderStyle.None;
-                    img1.Name = a.Nome;
+                    if (emPesquisa)
+                    {
+                        img1.Name = "p" + a.DirID;
+                    }
+                    else
+                    {
+                        img1.Name = a.Nome;
+                    }
                     img1.MouseClick += this.Abre;
                     img1.MouseEnter += img1_MouseEnter;
                     img1.MouseLeave += img1_MouseLeave;
@@ -187,10 +199,8 @@ namespace SistOp
 
 
             PictureBox pb = sender as PictureBox;
-            if (pb.ImageLocation == Directory.GetCurrentDirectory() + @"\Resources\folder.png")
+            if (!emPesquisa)
             {
-
-
                 if (e.Button == MouseButtons.Right)
                 {
                     contxtMenuStrip.Show(sender as Control, e.X, e.Y);
@@ -198,18 +208,56 @@ namespace SistOp
                 }
                 else if (e.Button == MouseButtons.Left)
                 {
-                    string nome = (sender as PictureBox).Name;
-                    dirAberto = FileSystem.ProcuraFilho(nome, dirAberto);
-                    LimpaLayout(dirAberto, true);
-                    tsslabel.Text = FileSystem.CaminhoAteRaiz(dirAberto);
+                    if (pb.ImageLocation == Directory.GetCurrentDirectory() + @"\Resources\folder.png")
+                    {
+                                           string nome = pb.Name;
+                        dirAberto = FileSystem.ProcuraFilho(nome, dirAberto);
+                        LimpaLayout(dirAberto, true);
+                        tsslabel.Text = FileSystem.CaminhoAteRaiz(dirAberto);
+                    }
+
+                    else if (pb.ImageLocation == Directory.GetCurrentDirectory() + @"\Resources\file.png")
+                    {
+                        twvListaPastas.Visible = false;
+                        LimpaLayout(dirAberto, false);
+                        FileAberto = FileSystem.ProcuraFilho(pb.Name, dirAberto);
+                        GeraLayoutEdicao(FileAberto);
+                    }
                 }
             }
-            else if (pb.ImageLocation == Directory.GetCurrentDirectory() + @"\Resources\file.png")
+            else
             {
-                twvListaPastas.Visible = false;
-                LimpaLayout(dirAberto, false);
-                FileAberto = FileSystem.ProcuraFilho(pb.Name, dirAberto);
-                GeraLayoutEdicao(FileAberto);
+                if (e.Button == MouseButtons.Right)
+                {
+                    //contxtMenuStrip.Show(sender as Control, e.X, e.Y);
+                    //Clicado = sender as PictureBox;
+                }
+                else if (e.Button == MouseButtons.Left)
+                {
+                    string nome = (sender as PictureBox).Name;
+                    long PesquisaID = long.Parse(nome.Trim(new char[] {'p'}));
+                    bool isDir = false;
+                    if (pb.ImageLocation == Directory.GetCurrentDirectory() + @"\Resources\folder.png")
+                    {
+                        
+
+                        dirAberto = FileSystem.ProcuraID(PesquisaID);
+                        isDir = true;
+                        tsslabel.Text = FileSystem.CaminhoAteRaiz(dirAberto);
+                    }
+
+                    else if (pb.ImageLocation == Directory.GetCurrentDirectory() + @"\Resources\file.png")
+                    {
+                        twvListaPastas.Visible = false;
+                        
+                        FileAberto = FileSystem.ProcuraID(PesquisaID);
+                        GeraLayoutEdicao(FileAberto);
+
+                    }
+                    emPesquisa = false;
+                    LimpaLayout(dirAberto, isDir);
+                }
+
             }
         }
 
@@ -302,6 +350,7 @@ namespace SistOp
             string Hex = BC.toByte(texto);
             Arquivo aux = new Arquivo(FileAberto);
             FileAberto.Conteudo = Hex;
+            FileAberto.UltimaAlteracao = DateTime.Now;
             DC.Atualiza(aux, FileAberto);
 
 
@@ -326,10 +375,20 @@ namespace SistOp
             }
 
         }
-
+        /// <summary>
+        /// Ativa ou desativa os botões de comando
+        /// </summary>
+        /// <param name="Comando">False - Desativa; True - Ativa.</param>
+        private void AtivaDesativaControls(bool Comando)
+        {
+            btnNovaPasta.Enabled = Comando;
+            btnNewFile.Enabled = Comando;
+            btnPesquisa.Enabled = Comando;
+            btnVoltar.Enabled = Comando;
+        }
         private void btnNovaPasta_Click(object sender, EventArgs e)
         {
-            btnNovaPasta.Enabled = false;
+            AtivaDesativaControls(false);
             this.SuspendLayout();
 
             var img1 = new System.Windows.Forms.PictureBox();
@@ -391,14 +450,24 @@ namespace SistOp
                     this.ResumeLayout(false);
 
                     LimpaLayout(dirAberto, true);
-                    btnNovaPasta.Enabled = true;
+                    AtivaDesativaControls(true);
                     CriaTree(FileSystem.Raiz);
-
                 }
                 else
                 {
                     MessageBox.Show("Arquivo ou diretório já existente com esse nome");
                 }
+            }
+            else if (e.KeyCode == Keys.Escape)
+            {
+                this.SuspendLayout();
+                this.Controls.Remove(txt);
+                txt.Dispose();
+                this.ResumeLayout(false);
+                LimpaLayout(dirAberto, true);
+                AtivaDesativaControls(true);
+                CriaTree(FileSystem.Raiz);
+
             }
         }
 
@@ -408,6 +477,7 @@ namespace SistOp
             DataControl DC = new DataControl();
             DC.remove(remove);
             LimpaLayout(dirAberto, true);
+            CriaTree(FileSystem.Raiz);
         }
 
         private void Form1_KeyUp(object sender, KeyEventArgs e)
@@ -452,18 +522,48 @@ namespace SistOp
         private void propriedadesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             PictureBox pb = Clicado;
-            Arquivo Propriedades =  FileSystem.ProcuraFilho(pb.Name, dirAberto);
-            frmPropriedades frm = new frmPropriedades(Propriedades,FileSystem);
+            Arquivo Propriedades = FileSystem.ProcuraFilho(pb.Name, dirAberto);
+            frmPropriedades frm = new frmPropriedades(Propriedades, FileSystem);
             frm.ShowDialog();
         }
 
         private void frmGerenciador_FormClosed(object sender, FormClosedEventArgs e)
         {
-           
+
         }
 
+        private void btnPesquisa_Click(object sender, EventArgs e)
+        {
+            emPesquisa = true;
+            ArquivoPesquisa = PesquisaArvore(dirAberto, txtPesquisa.Text);
+
+            LimpaLayout(ArquivoPesquisa, true);
+        }
+
+        private Arquivo PesquisaArvore(Arquivo dirAberto, string p)
+        {
+            Arquivo aux = new Arquivo(dirAberto.Nome, null, dirAberto.IsDir, dirAberto.DirID, dirAberto.PaiID, dirAberto.Conteudo);
+
+            pesquisar(dirAberto, p, aux);
+
+            return aux;
 
 
+        }
+
+        private void pesquisar(Arquivo dirAberto, string p, Arquivo aux)
+        {
+            foreach (Arquivo a in dirAberto.Filhos)
+            {
+                if (a.Nome.Contains(p))
+                {
+                    aux.Filhos.Add(a);
+                }
+
+                pesquisar(a, p, aux);
+            }
+
+        }
 
 
     }
